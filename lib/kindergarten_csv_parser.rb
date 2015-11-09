@@ -9,10 +9,11 @@ class KindergartenParser
     kindergarten_data = {}
     csv = CSV.open(@path, headers: true, header_converters: :symbol)
     csv.each do |line|
-      unless kindergarten_data.key?(line[:location])
-        kindergarten_data[line[:location]] = {}
+      district_name = line[:location].upcase
+      unless kindergarten_data.key?(district_name)
+        kindergarten_data[district_name] = {}
       end
-      kindergarten_data[line[:location]][line[:timeframe]] = line[:data]
+      kindergarten_data[district_name][line[:timeframe]] = line[:data]
     end
     kindergarten_data
   end
