@@ -28,6 +28,10 @@ class EnrollmentRepository
   def find_all_matching(string)
     @enrollments.select { |e| e.name.include?(string) }
   end
+
+  def district_names
+    @enrollments.map { |e| e.name }
+  end
 end
 
 er = EnrollmentRepository.new

@@ -1,10 +1,7 @@
 class District
-  attr_reader :name_hash
+  attr_reader :name
 
   def initialize(name_hash)
-    @name_hash = name_hash
-  end
-
-  def name
+    @name = name_hash[:name]
   end
 end

@@ -3,9 +3,9 @@ require './lib/kindergarten_csv_parser'
 require 'pry'
 
 class DistrictRepository
-  def initialize
-    @districts = {}
-  end
+  # def initialize
+  #   @districts = []
+  # end
 
   # def load_data(data_path_hash)
   #   if data_path_hash.keys.include?(:kindergarten)
@@ -15,19 +15,21 @@ class DistrictRepository
 
   def load_data(data_path_hash)
     if data_path_hash.keys.include?(:enrollment)
+      e = EnrollmentRepository.new
+      e.load_data(data_path_hash)
+      enrollment_district_names = e.district_names
+      #other stuff to go here for other repos
+      @district_names = enrollment_district_names
       # create instance of enrollment repo and have it load that data
       # @data = KindergartenParser.new(data_path_hash[:kindergarten]).parse
+      create_districts
     end
   end
 
   def create_districts
-    #create district object
-    @data.each do |key, value|
-      district = District.new({:name => key})
-      @districts[key] = district
+    @districts = @district_names.map do |district|
+      district = District.new({:name => district})
     end
-    binding.pry
-    @districts
   end
 
 
