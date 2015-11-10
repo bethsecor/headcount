@@ -7,9 +7,16 @@ class DistrictRepository
     @districts = {}
   end
 
+  # def load_data(data_path_hash)
+  #   if data_path_hash.keys.include?(:kindergarten)
+  #     @data = KindergartenParser.new(data_path_hash[:kindergarten]).parse
+  #   end
+  # end
+
   def load_data(data_path_hash)
-    if data_path_hash.keys.include?(:kindergarten)
-      @data = KindergartenParser.new(data_path_hash[:kindergarten]).parse
+    if data_path_hash.keys.include?(:enrollment)
+      # create instance of enrollment repo and have it load that data
+      # @data = KindergartenParser.new(data_path_hash[:kindergarten]).parse
     end
   end
 
