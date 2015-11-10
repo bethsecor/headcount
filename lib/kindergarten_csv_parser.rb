@@ -40,4 +40,4 @@ class KindergartenParser
   end
 end
 
-puts KindergartenParser.new("./data/Kindergartners in full-day program.csv").format
+# puts KindergartenParser.new("./data/Kindergartners in full-day program.csv").format
