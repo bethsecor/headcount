@@ -1,40 +1,42 @@
 require "./lib/district"
 require './lib/kindergarten_csv_parser'
+require './lib/enrollment_repository'
 require 'pry'
 
 class DistrictRepository
-  # def initialize
-  #   @districts = []
-  # end
-
-  # def load_data(data_path_hash)
-  #   if data_path_hash.keys.include?(:kindergarten)
-  #     @data = KindergartenParser.new(data_path_hash[:kindergarten]).parse
-  #   end
-  # end
+  attr_reader :district_names, :districts, :er
+  def initialize
+    @district_names = []
+  end
 
   def load_data(data_path_hash)
-    if data_path_hash.keys.include?(:enrollment)
-      e = EnrollmentRepository.new
-      e.load_data(data_path_hash)
-      enrollment_district_names = e.district_names
-      #other stuff to go here for other repos
-      @district_names = enrollment_district_names
-      # create instance of enrollment repo and have it load that data
-      # @data = KindergartenParser.new(data_path_hash[:kindergarten]).parse
-      create_districts
-    end
+    send_enrollment_data(data_path_hash)
+    @district_names = @district_names.flatten
+    create_districts
+    @district_names
   end
 
   def create_districts
-    @districts = @district_names.map do |district|
-      district = District.new({:name => district})
+    @districts = district_names.map do |district|
+      District.new({:name => district, :enrollment => get_enrollment_object(district)})
     end
   end
 
-
+  def get_enrollment_object(district)
+    er.find_by_name(district)
+  end
 
   def find_by_name(district_name)
+    @districts.select { |d| d.name == district_name }[0]
+  end
+
+  def send_enrollment_data(data_path_hash)
+    if data_path_hash.keys.include?(:enrollment)
+      @er = EnrollmentRepository.new
+      er.load_data(data_path_hash)
+      enrollment_district_names = er.district_names
+      @district_names << enrollment_district_names
+    end
   end
 end
 
