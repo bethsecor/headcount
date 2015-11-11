@@ -32,6 +32,6 @@ class EnrollmentRepository
   end
 
   def district_names
-    @enrollments.map(&:name)
+   w @enrollments.map(&:name)
   end
 end

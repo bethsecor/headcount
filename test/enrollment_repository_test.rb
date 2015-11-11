@@ -4,15 +4,29 @@ require './lib/enrollment_repository'
 
 class EnrollmentRepositoryTest < Minitest::Test
 
-  def test_load_data
+  def test_load_kindergarten_data
     e = EnrollmentRepository.new
     actual = e.load_data({
       :enrollment => {
         :kindergarten => "./test/fixtures/kindergarten_sample.csv"
       }
     })
-    expected = [{:name => "COLORADO", :kindergarten_participation => {2007 => 0.39465, 2006 => 0.33677}},
-                {:name => "ACADEMY 20",:kindergarten_participation => {2007 => 0.39159, 2006 => nil}}]
+    expected = [{:name => "COLORADO", :kindergarten_participation => { 2007 => 0.39465, 2006 => 0.33677 }},
+                {:name => "ACADEMY 20",:kindergarten_participation => { 2007 => 0.39159, 2006 => nil }}]
+    assert_equal expected, actual
+  end
+
+  def test_load_high_school_grad_data
+    e = EnrollmentRepository.new
+    actual = e.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample.csv"
+        :high_school_graduation => "./test/fixtures/high_school_grad_sample.csv"
+      }
+    })
+    expected = [{:name => "ACADEMY 20", :high_school_graduation => { 2010 => 0.895, 2011 => 0.895 }},
+                {:name => "ADAMS COUNTY 14",:high_school_graduation => { 2010 => 0.57, 2011 => 0.608 }}
+                {:name => "ADAMS-ARAPAHOE 28J", :high_school_graduation => { 2010 => 0.455, 2011 => 0.485 }}]
     assert_equal expected, actual
   end
 
