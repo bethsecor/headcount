@@ -27,7 +27,7 @@ class DistrictRepository
   end
 
   def find_by_name(district_name)
-    @districts.select { |d| d.name == district_name }[0]
+    @districts.select { |d| d.name == district_name.upcase }[0]
   end
 
   def send_enrollment_data(data_path_hash)

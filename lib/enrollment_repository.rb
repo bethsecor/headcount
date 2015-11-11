@@ -22,7 +22,7 @@ class EnrollmentRepository
   end
 
   def find_by_name(district_name)
-    @enrollments.select { |e| e.name == district_name }[0]
+    @enrollments.select { |e| e.name == district_name.upcase }[0]
   end
 
   def find_all_matching(string)

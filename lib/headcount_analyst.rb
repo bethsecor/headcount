@@ -28,7 +28,6 @@ class HeadcountAnalyst
   end
 
   def get_district_data(district)
-    # binding.pry
     district_repo.find_by_name(district).enrollment.kindergarten_participation_by_year
   end
 
@@ -40,12 +39,17 @@ class HeadcountAnalyst
     h_1 = get_district_data(district_one)
     h_2 = get_district_against_data(district_two)
 
-    {2009: 0.45, 2012: 0.76}
-    {2010: 0.45, 2012: 0.42}
+    ratios_by_year(h_1, h_2)
+  end
 
-    
-
-
+  def ratios_by_year(data_1, data_2)
+    ratios = {}
+    data_1.each do |k, v|
+      if data_2.key?(k)
+        ratios[k] = (data_1[k]/data_2[k]).round(2)
+      end
+    end
+    ratios
   end
 
 end

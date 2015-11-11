@@ -34,6 +34,17 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal "ACADEMY 20", dr.find_by_name("ACADEMY 20").name
   end
 
+  def test_find_by_name_lower_case
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample.csv"
+      }
+    })
+    assert_equal "ACADEMY 20", dr.find_by_name("academy 20").name
+
+  end
+
   def test_enrollment_object_relationship
     dr = DistrictRepository.new
     dr.load_data({
