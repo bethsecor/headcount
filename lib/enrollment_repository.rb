@@ -1,4 +1,5 @@
-require './lib/kindergarten_parser'
+# require './lib/kindergarten_parser'
+require './lib/data_by_year_parser'
 require './lib/enrollment'
 
 # Holds all enrollment instances
@@ -14,7 +15,9 @@ class EnrollmentRepository
   end
 
   def kindergarten_data(data_path_hash)
-    KindergartenParser.new(data_path_hash[:enrollment][:kindergarten]).format
+    # KindergartenParser.new(data_path_hash[:enrollment][:kindergarten]).format
+    DataByYearParser.new(data_path_hash[:enrollment][:kindergarten]).format_kindergarten_data
+
   end
 
   def create_enrollments
@@ -32,6 +35,6 @@ class EnrollmentRepository
   end
 
   def district_names
-   w @enrollments.map(&:name)
+    @enrollments.map(&:name)
   end
 end
