@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/kindergarten_csv_parser'
+require './lib/kindergarten_parser'
 
 class KindergartenParserTest < Minitest::Test
 

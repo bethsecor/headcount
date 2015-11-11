@@ -1,3 +1,4 @@
+# Holds all enrollment data for a given district
 class Enrollment
   attr_reader :name, :kindergarten_participation
   def initialize(enroll_data)

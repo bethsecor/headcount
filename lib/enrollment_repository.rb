@@ -1,18 +1,20 @@
-require './lib/kindergarten_csv_parser'
+require './lib/kindergarten_parser'
 require './lib/enrollment'
 
+# Holds all enrollment instances
 class EnrollmentRepository
   attr_reader :enrollments
-  # def initialize
-  #   @enrollments = []
-  # end
 
   def load_data(data_path_hash)
     if data_path_hash[:enrollment].keys.include?(:kindergarten)
-      @data = KindergartenParser.new(data_path_hash[:enrollment][:kindergarten]).format
+      @data = kindergarten_data(data_path_hash)
     end
     create_enrollments
     @data
+  end
+
+  def kindergarten_data(data_path_hash)
+    KindergartenParser.new(data_path_hash[:enrollment][:kindergarten]).format
   end
 
   def create_enrollments
@@ -30,16 +32,6 @@ class EnrollmentRepository
   end
 
   def district_names
-    @enrollments.map { |e| e.name }
+    @enrollments.map(&:name)
   end
 end
-
-er = EnrollmentRepository.new
-
-puts er.load_data({
-  :enrollment => {
-    :kindergarten => "./test/fixtures/kindergarten_sample.csv"
-  }
-})
-
-# puts er.create_enrollments
