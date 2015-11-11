@@ -44,7 +44,7 @@ class DataByYearParser
     data
   end
 
-  def format_high_school_graduation_data
+  def format_hs_graduation_data
     data = []
     parse.each do |key, value|
       data << { name: key, high_school_graduation: value }
