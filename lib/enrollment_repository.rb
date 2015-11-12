@@ -40,7 +40,7 @@ class EnrollmentRepository
   end
 
   def find_all_matching(string)
-    @enrollments.select { |e| e.name.include?(string) }
+    @enrollments.select { |e| e.name.include?(string.upcase) }
   end
 
   def district_names

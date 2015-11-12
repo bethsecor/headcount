@@ -10,7 +10,7 @@ class HeadcountAnalyst
     district_one_data = get_district_data(district_one).values.compact
     district_two_data = get_district_against_data(district_two).values.compact
     if validate_data(district_one_data) && validate_data(district_two_data)
-      (average(district_one_data) / average(district_two_data)).round(2)
+      truncate_to_three_digits(average(district_one_data) / average(district_two_data))
     else
       "Can't compute."
     end
@@ -50,6 +50,15 @@ class HeadcountAnalyst
   end
 
   def calculate_ratio(data_1, data_2, k, ratios)
-    ratios[k] = (data_1[k] / data_2[k]).round(2)
+    ratios[k] = truncate_to_three_digits(data_1[k] / data_2[k])
+  end
+
+  def truncate_to_three_digits(value)
+    (value * 1000).truncate.to_f / 1000 unless value.nil?
+  end
+
+  # not used yet!
+  def truncate_hash_values(data)
+    data.map { |k,v| [k,truncate_to_three_digits(v)] }.to_h
   end
 end
