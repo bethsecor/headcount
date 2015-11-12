@@ -10,14 +10,14 @@ class EnrollmentRepository
     #   @data = kindergarten_data(data_path_hash)
     # end
     load_kindergarten_data(data_path_hash)
-    elsif data_path_hash[:enrollment].keys.include?(:high_school_graduation)
-      @data.merge(high_school_graduation_data(data_path_hash))
-    end
+    # elsif data_path_hash[:enrollment].keys.include?(:high_school_graduation)
+    #   @data.merge(high_school_graduation_data(data_path_hash))
+    # end
     create_enrollments
     @data
   end
 
-  def load_kindergarten_data(date_path_hash)
+  def load_kindergarten_data(data_path_hash)
     @data = kindergarten_data(data_path_hash) if data_path_hash[:enrollment].keys.include?(:kindergarten)
   end
 
