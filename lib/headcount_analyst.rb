@@ -21,7 +21,7 @@ class HeadcountAnalyst
   end
 
   def validate_data(data)
-    !data.empty?
+    !data.empty? && average(data) != 0
   end
 
   def get_district_data(district_name)
@@ -50,7 +50,11 @@ class HeadcountAnalyst
   end
 
   def calculate_ratio(data_1, data_2, k, ratios)
-    ratios[k] = truncate_to_three_digits(data_1[k] / data_2[k])
+    if !(data_1[k] == 0 || data_2[k] == 0)
+      ratios[k] = truncate_to_three_digits(data_1[k] / data_2[k])
+    else
+      ratios[k] = "Can't compute."
+    end
   end
 
   def truncate_to_three_digits(value)

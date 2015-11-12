@@ -45,6 +45,18 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal 0.710, ha.kindergarten_participation_rate_variation('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
   end
 
+  def test_kindergarten_participation_rate_variation_different_districts_with_zero_data_point
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample_with_zero_data_point.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+
+    assert_equal "Can't compute.", ha.kindergarten_participation_rate_variation('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
+  end
+
   def test_kindergarten_participation_rate_variation_trend_different_districts
     dr = DistrictRepository.new
     dr.load_data({
@@ -54,6 +66,18 @@ class HeadcountAnalystTest < Minitest::Test
     })
     ha = HeadcountAnalyst.new(dr)
     expected = {2006 => 0.791, 2007 => 0.646}
+    assert_equal expected, ha.kindergarten_participation_rate_variation_trend('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
+  end
+
+  def test_kindergarten_participation_rate_variation_trend_different_districts_with_zero_data_points
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample_with_zero_data_point.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    expected = {2006 => "Can't compute.", 2007 => "Can't compute."}
     assert_equal expected, ha.kindergarten_participation_rate_variation_trend('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
   end
 
