@@ -1,4 +1,4 @@
-# Analyzes data points
+# Analyzes data from district repository
 class HeadcountAnalyst
   attr_reader :district_repo
 
@@ -10,9 +10,7 @@ class HeadcountAnalyst
     district_one_data = get_district_data(district_one).values.compact
     district_two_data = get_district_against_data(district_two).values.compact
     if validate_data(district_one_data) && validate_data(district_two_data)
-      district_one_average = average(district_one_data)
-      district_two_average = average(district_two_data)
-      (district_one_average / district_two_average).round(6)
+      (average(district_one_data) / average(district_two_data)).round(2)
     else
       "Can't compute."
     end
