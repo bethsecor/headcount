@@ -88,14 +88,13 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal nil,  district.enrollment.kindergarten_participation_in_year(2006)
   end
 
-  def test_load_larger_data
-    skip
+  def test_load_full_kindergarten_data
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
         :kindergarten => "./data/Kindergartners in full-day program.csv"
       }
     })
-    assert_equal number, dr.district_names.length
+    assert_equal 181, dr.district_names.length
   end
 end
