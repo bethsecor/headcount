@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/headcount_analyst'
 require './lib/district_repository'
+require 'pry'
 
 class HeadcountAnalystTest < Minitest::Test
 
@@ -94,6 +95,32 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal 1.071, ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
   end
 
+  def test_kindergarten_participation_against_high_school_graduation
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample.csv",
+        :high_school_graduation => "./test/fixtures/hs_grad_including_state_data.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+
+    assert_equal 0.875, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+  end
+
+  def test_kindergarten_participation_correlates_with_high_school_graduation
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample_3.csv",
+        :high_school_graduation => "./test/fixtures/hs_grad_including_state_data.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    # assert ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "ACADEMY 20")
+    assert ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J"])
+  end
+
   def test_ratios_by_year
     dr = DistrictRepository.new
     ha = HeadcountAnalyst.new(dr)
@@ -102,10 +129,5 @@ class HeadcountAnalystTest < Minitest::Test
     expected = {2012 => 1.809, 2013 => 1.178}
     assert_equal expected, ha.ratios_by_year(h_1, h_2)
   end
-
-
-
-
-
 
 end

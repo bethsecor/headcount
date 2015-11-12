@@ -68,11 +68,8 @@ class EnrollmentRepositoryTest < Minitest::Test
 
   def test_find_all_matching_upcase_name
     er = EnrollmentRepository.new
-    er.load_data({
-      :enrollment => {
-        :kindergarten => "./test/fixtures/kindergarten_sample_2.csv"
-      }
-    })
+    er.create_enrollments!([{:name => "ACADEMY 20"},
+                            {:name => "ACADEMY 100"}])
     e = er.find_all_matching("ACADEMY")
     assert_equal 2, e.count
     assert_equal "ACADEMY 20", e[0].name
