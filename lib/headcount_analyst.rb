@@ -57,8 +57,7 @@ class HeadcountAnalyst
     (value * 1000).truncate.to_f / 1000 unless value.nil?
   end
 
-  # not used yet!
-  def truncate_hash_values(data)
-    data.map { |k,v| [k,truncate_to_three_digits(v)] }.to_h
-  end
+  # def truncate_hash_values(data)
+  #   data.map { |k,v| [k,truncate_to_three_digits(v)] }.to_h
+  # end
 end

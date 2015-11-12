@@ -31,6 +31,10 @@ class DistrictRepository
     @districts.select { |d| d.name == district_name.upcase }[0]
   end
 
+  def find_all_matching(string)
+    @districts.select { |d| d.name.include?(string.upcase) }
+  end
+
   def send_enrollment_data(data_path_hash)
     if data_path_hash.keys.include?(:enrollment)
       @er = EnrollmentRepository.new
