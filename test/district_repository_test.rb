@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/district_repository'
+require 'pry'
 
 class DistrictRepositoryTest < Minitest::Test
   def test_load_sample_data
