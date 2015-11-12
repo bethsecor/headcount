@@ -37,18 +37,16 @@ class DataByYearParser
   end
 
   def format_kindergarten_data
-    data = []
-    parse.each do |key, value|
-      data << { name: key, kindergarten_participation: value }
-    end
-    data
+    parse.map do |key, value|
+        { name: key,
+          kindergarten_participation: Hash[value.sort_by { |year, percent| year}] }
+      end
   end
 
   def format_hs_graduation_data
-    data = []
-    parse.each do |key, value|
-      data << { name: key, high_school_graduation: value }
-    end
-    data
+    parse.map do |key, value|
+        { name: key,
+          high_school_graduation: Hash[value.sort_by { |year, percent| year}] }
+      end
   end
 end
