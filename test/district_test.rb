@@ -11,7 +11,7 @@ class DistrictTest < Minitest::Test
   end
 
   def test_enrollment
-    data = {:name => "ACADEMY 20",:kindergarten_participation => {2007 => 0.39159, 2006 => 0.35364}}
+    data = {:name => "ACADEMY 20",:kindergarten_participation => {2006 => 0.35364, 2007 => 0.39159}}
     e = Enrollment.new(data)
     d = District.new({:name => "ACADEMY 20", :enrollment => e})
     assert_equal e, d.enrollment

@@ -12,8 +12,8 @@ class EnrollmentRepositoryTest < Minitest::Test
         :kindergarten => "./test/fixtures/kindergarten_sample.csv"
       }
     })
-    expected = [{:name => "COLORADO", :kindergarten_participation => { 2007 => 0.39465, 2006 => 0.33677 }},
-                {:name => "ACADEMY 20",:kindergarten_participation => { 2007 => 0.39159, 2006 => nil }}]
+    expected = [{:name => "COLORADO", :kindergarten_participation => { 2006 => 0.33677, 2007 => 0.39465 }},
+                {:name => "ACADEMY 20",:kindergarten_participation => { 2006 => nil, 2007 => 0.39159 }}]
     assert_equal expected, actual
   end
 
