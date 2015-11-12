@@ -13,21 +13,11 @@ class EnrollmentRepository
 
   def load_data(data_path_hash)
     loaded_data = []
-    # if data_path_hash[:enrollment].keys.include?(:kindergarten)
-    #   @data = kindergarten_data(data_path_hash)
-    # end
-    # binding.pry
     loaded_data << load_kindergarten_data(data_path_hash)
     loaded_data << load_hs_data(data_path_hash)
-    # @merger.merge(@data, kinder_data) if !kinder_data.nil?
-
     loaded_data.compact!
     full_data_merged = merge_data(loaded_data)
-    # @merger.merge(@data, hs_data) if !hs_data.nil?
 
-    # elsif data_path_hash[:enrollment].keys.include?(:high_school_graduation)
-    #   @data.merge(high_school_graduation_data(data_path_hash))
-    # end
     create_enrollments(full_data_merged)
     full_data_merged
   end

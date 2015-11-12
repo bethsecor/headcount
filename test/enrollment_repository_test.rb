@@ -8,8 +8,7 @@ class EnrollmentRepositoryTest < Minitest::Test
 
   def test_load_kindergarten_data
     e = EnrollmentRepository.new
-    # actual = e.load_data({
-    actual = e.load_kindergarten_data({
+    actual = e.load_data({
       :enrollment => {
         :kindergarten => "./test/fixtures/kindergarten_sample.csv"
       }
@@ -18,10 +17,6 @@ class EnrollmentRepositoryTest < Minitest::Test
                 {:name => "ACADEMY 20",:kindergarten_participation => { 2006 => nil, 2007 => 0.39159 }}]
     assert_equal expected, actual
   end
-
-  # Plan moving forward:
-  # separate out load data methods (see load_kindergarten_data above)
-  # merge hashes by district name
 
   def test_load_kinder_and_hs_data
     e = EnrollmentRepository.new

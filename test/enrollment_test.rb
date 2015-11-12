@@ -29,10 +29,28 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_kindergarten_participation_in_year
-    data = {:name => "ACADEMY 20",:kindergarten_participation => {2006 => 0.35364, 2007 => 0.39159}}
+    data = {:name => "ACADEMY 20",
+            :kindergarten_participation => {2006 => 0.35364, 2007 => 0.39159}}
     e = Enrollment.new(data)
     expected = 0.391
     assert_equal expected, e.kindergarten_participation_in_year(2007)
   end
 
+  def test_graduation_rate_by_year
+    data = {:name => "ACADEMY 20",
+            :kindergarten_participation => {2006 => 0.35364, 2007 => 0.39159},
+            :high_school_graduation => { 2010 => 0.48482, 2011 => 0.89538281 }}
+    e = Enrollment.new(data)
+    expected = { 2010 => 0.484, 2011 => 0.895 }
+    assert_equal expected, e.graduation_rate_by_year
+  end
+
+  def test_graduation_rate_in_year
+    data = {:name => "ACADEMY 20",
+            :kindergarten_participation => {2006 => 0.35364, 2007 => 0.39159},
+            :high_school_graduation => { 2010 => 0.48482, 2011 => 0.89538281 }}
+    e = Enrollment.new(data)
+    expected = 0.484
+    assert_equal expected, e.graduation_rate_in_year(2010)
+  end
 end

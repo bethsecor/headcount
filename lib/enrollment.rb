@@ -1,6 +1,6 @@
 # Holds all enrollment data for a given district
 class Enrollment
-  attr_reader :name, :kindergarten_participation
+  attr_reader :name, :kindergarten_participation, :high_school_graduation
   def initialize(enroll_data)
     @name = enroll_data[:name]
     @kindergarten_participation = enroll_data[:kindergarten_participation]
@@ -13,6 +13,14 @@ class Enrollment
 
   def kindergarten_participation_in_year(year)
     truncate_to_three_digits(kindergarten_participation[year])
+  end
+
+  def graduation_rate_by_year
+    truncate_hash_values(high_school_graduation)
+  end
+
+  def graduation_rate_in_year(year)
+    truncate_to_three_digits(high_school_graduation[year])
   end
 
   def truncate_to_three_digits(value)
