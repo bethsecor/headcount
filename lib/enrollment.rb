@@ -8,10 +8,18 @@ class Enrollment
   end
 
   def kindergarten_participation_by_year
-    @kindergarten_participation
+    truncate_hash_values(kindergarten_participation)
   end
 
   def kindergarten_participation_in_year(year)
-    @kindergarten_participation[year]
+    truncate_to_three_digits(kindergarten_participation[year])
+  end
+
+  def truncate_to_three_digits(value)
+    (value * 1000).truncate.to_f / 1000 unless value.nil?
+  end
+
+  def truncate_hash_values(data)
+    data.map { |k,v| [k,truncate_to_three_digits(v)] }.to_h
   end
 end
