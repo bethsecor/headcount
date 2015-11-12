@@ -2,6 +2,8 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/enrollment_repository'
 
+require 'pry'
+
 class EnrollmentRepositoryTest < Minitest::Test
 
   def test_load_kindergarten_data
@@ -21,8 +23,7 @@ class EnrollmentRepositoryTest < Minitest::Test
   # separate out load data methods (see load_kindergarten_data above)
   # merge hashes by district name
 
-  def test_load_high_school_grad_data
-    skip
+  def test_load_kinder_and_hs_data
     e = EnrollmentRepository.new
     actual = e.load_data({
       :enrollment => {
@@ -30,9 +31,11 @@ class EnrollmentRepositoryTest < Minitest::Test
         :high_school_graduation => "./test/fixtures/high_school_grad_sample.csv"
       }
     })
-    expected = [{:name => "ACADEMY 20", :high_school_graduation => { 2010 => 0.895, 2011 => 0.895 }},
-                {:name => "ADAMS COUNTY 14",:high_school_graduation => { 2010 => 0.57, 2011 => 0.608 }},
-                {:name => "ADAMS-ARAPAHOE 28J", :high_school_graduation => { 2010 => 0.455, 2011 => 0.485 }}]
+    expected =    [{:name => "COLORADO", :kindergarten_participation => { 2006 => 0.33677, 2007 => 0.39465 }},
+                   {:name => "ACADEMY 20",:kindergarten_participation => { 2006 => nil, 2007 => 0.39159 },
+                                          :high_school_graduation => { 2010 => 0.895, 2011 => 0.895 }},
+                   {:name => "ADAMS COUNTY 14",:high_school_graduation => { 2010 => 0.57, 2011 => 0.608 }},
+                   {:name => "ADAMS-ARAPAHOE 28J", :high_school_graduation => { 2010 => 0.455, 2011 => 0.485 }}]
     assert_equal expected, actual
   end
 
