@@ -5,33 +5,42 @@ require 'pry'
 
 class CSAPDataMergerTest < Minitest::Test
   def test_merges_csap_math_reading_writing
-    math_data = {"COLORADO" => {:all_students => {2011 => {:math => 0.5573}, 2012 => {:math => 0.558}},
-                    :asian => {2011 => {:math => 0.7094}, 2012 => {:math => 0.7192}}},
-                    "ACADEMY 20" => {:all_students => {2011 => {:math => 0.5737}, 2012 => {:math => 0.0191}},
-                    :asian => {2011 => {:math => 0.48281}, 2012 => {:math => 0.10384}}}}
-
-    reading_data = {"COLORADO" => {:all_students => {2011 => {:reading => 0.4882}, 2012 => {:reading => 0.558}},
-                    :asian => {2011 => {:reading => 0.383}, 2012 => {:reading => 0.481}}},
-                    "ACADEMY 20" => {:all_students => {2011 => {:reading => 0.5737}, 2012 => {:reading => 0.0110}},
-                    :asian => {2011 => {:reading => 0.8381}, 2012 => {:reading => 0.3881}}}}
-
-    writing_data = {"COLORADO" => {:all_students => {2011 => {:writing => 0.3828}, 2012 => {:writing => 0.9484}},
-                    :asian => {2011 => {:writing => 0.2838}, 2012 => {:writing => 0.85583}}},
-                    "ACADEMY 20" => {:all_students => {2011 => {:writing => 0.848484}, 2012 => {:writing => 0.83881}},
-                    :asian => {2011 => {:writing => 0.84882}, 2012 => {:writing => 0.8282}}}}
+    # math_data = {"COLORADO" => {:all_students => {2011 => {:math => 0.5573}, 2012 => {:math => 0.558}},
+    #                 :asian => {2011 => {:math => 0.7094}, 2012 => {:math => 0.7192}}},
+    #                 "ACADEMY 20" => {:all_students => {2011 => {:math => 0.68}, 2012 => {:math => 0.6894}},
+    #                 :asian => {2011 => {:math => 0.8169}, 2012 => {:math => 0.8182}}}}
+    #
+    # reading_data = {"COLORADO" => {:all_students => {2011 => {:reading => 0.68}, 2012 => {:reading => 0.6932}},
+    #                 :asian => {2011 => {:reading => 0.7482}, 2012 => {:reading => 0.7574}}},
+    #                 "ACADEMY 20" => {:all_students => {2011 => {:reading => 0.83}, 2012 => {:reading => 0.84585}},
+    #                 :asian => {2011 => {:reading => 0.8976}, 2012 => {:reading => 0.89328}}}}
+    #
+    # writing_data = {"COLORADO" => {:all_students => {2011 => {:writing => 0.5531}, 2012 => {:writing => 0.5404}},
+    #                 :asian => {2011 => {:writing => 0.6569}, 2012 => {:writing => 0.8658}}},
+    #                 "ACADEMY 20" => {:all_students => {2011 => {:writing => 0.7192}, 2012 => {:writing => 0.70593}},
+    #                 :asian => {2011 => {:writing => 0.8268}, 2012 => {:writing => 0.8083}}}}
+    merger = CSAPDataMerger.new({
+                                :statewide_testing => {
+                                  :math => "./test/fixtures/csap_data/math_data_sample.csv",
+                                  :reading => "./test/fixtures/csap_data/reading_data_sample.csv",
+                                  :writing => "./test/fixtures/csap_data/writing_data_sample.csv"
+                                }
+                              })
 
     expected = [ {:name=>"COLORADO",
                   :csap_data=>
                    {:all_students=>
-                     {2011=>{:math=>0.5573, :reading=>0.4882, :writing=>0.3828}, 2012=>{:math=>0.558, :reading=>0.558, :writing=>0.9484}},
+                     {2011=>{:math=>0.5573, :reading=>0.68, :writing=>0.5531}, 2012=>{:math=>0.558, :reading=>0.6932, :writing=>0.5404}},
                     :asian=>
-                     {2011=>{:math=>0.7094, :reading=>0.383, :writing=>0.2838}, 2012=>{:math=>0.7192, :reading=>0.481, :writing=>0.85583}}}},
+                     {2011=>{:math=>0.7094, :reading=>0.7384, :writing=>0.6569}, 2012=>{:math=>0.7192, :reading=>0.7574, :writing=>0.8658}}}},
                  {:name=>"ACADEMY 20",
                   :csap_data=>
                    {:all_students=>
-                     {2011=>{:math=>0.5737, :reading=>0.5737, :writing=>0.848484}, 2012=>{:math=>0.0191, :reading=>0.011, :writing=>0.83881}},
+                     {2011=>{:math=>0.68, :reading=>0.83, :writing=>0.7192}, 2012=>{:math=>0.6894, :reading=>0.84585, :writing=>0.70593}},
                     :asian=>
-                     {2011=>{:math=>0.48281, :reading=>0.8381, :writing=>0.84882}, 2012=>{:math=>0.10384, :reading=>0.3881, :writing=>0.8282}}}}]
+                     {2011=>{:math=>0.8169, :reading=>0.8976, :writing=>0.8268}, 2012=>{:math=>0.8182, :reading=>0.89328, :writing=>0.8083}}}}]
+
+    assert_equal expected, merger.merge_csap_data
   end
 
 end
