@@ -25,7 +25,7 @@ class HeadcountAnalyst
     if validate_data(district_one_data) && validate_data(district_two_data)
       truncate_to_three_digits(average(district_one_data) / average(district_two_data))
     else
-      "Can't compute."
+      nil # "Can't compute."
     end
   end
 
@@ -38,7 +38,9 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(name)
-    truncate_to_three_digits(kindergarten_variation(name) / graduation_variation(name))
+    unless kindergarten_variation(name).nil? || graduation_variation(name).nil?
+      truncate_to_three_digits(kindergarten_variation(name) / graduation_variation(name))
+    end
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(dist_opts)
@@ -50,13 +52,18 @@ class HeadcountAnalyst
       # kindergarten_participation_correlates_with_high_school_graduation(:across => ["Dist 1", "Dist 2"])
     elsif dist_opts[:across]
       info = dist_opts[:across].map { |dist_name|
-        kindergarten_participation_correlates_with_high_school_graduation(:for => dist_name)}
+        kindergarten_participation_correlates_with_high_school_graduation(:for => dist_name)}.compact
+        # binding.pry
       (info.count(true) / info.length.to_f) > 0.7
       # do thing for each district individually
       # if 70% + of those are true, then answer true
     else
       number = kindergarten_participation_against_high_school_graduation(dist_opts[:for])
-      number > 0.6 || number < 1.5
+      if !number.nil?
+        number > 0.6 && number < 1.5
+      else
+        nil
+      end
       # :for => "ACADEMY 20"
       # do thing for 1 district
       # get rate for this district
@@ -64,17 +71,17 @@ class HeadcountAnalyst
     end
   end
 
-  def correlation_for_single_district?(district_name)
-    kindergarten_participation_against_high_school_graduation(district_name)
-    number > 0.6 || number < 1.5
-  end
-
-  def correlation_for_multiple_districts?(dnames)
-    info = dnames.map do |dist_name|
-      correlation_for_single_district?(dist_name)
-    end
-    (info.count(true) / info.length.to_f) > 0.7
-  end
+  # def correlation_for_single_district?(district_name)
+  #   kindergarten_participation_against_high_school_graduation(district_name)
+  #   number > 0.6 || number < 1.5
+  # end
+  #
+  # def correlation_for_multiple_districts?(dnames)
+  #   info = dnames.map do |dist_name|
+  #     correlation_for_single_district?(dist_name)
+  #   end
+  #   (info.count(true) / info.length.to_f) > 0.7
+  # end
 
   def average(numbers)
     numbers.reduce(:+) / numbers.length
@@ -86,23 +93,22 @@ class HeadcountAnalyst
 
   def get_kinder_district_data(district_name)
     district = district_repo.find_by_name(district_name)
-    district.enrollment.kindergarten_participation_by_year
+    district.enrollment.kindergarten_participation
   end
 
   def get_kinder_district_against_data(district_name)
     district = district_repo.find_by_name(district_name[:against])
-    district.enrollment.kindergarten_participation_by_year
-    # might need to change this to get non-truncated values
+    district.enrollment.kindergarten_participation
   end
 
   def get_hs_district_data(district_name)
     district = district_repo.find_by_name(district_name)
-    district.enrollment.graduation_rate_by_year
+    district.enrollment.high_school_graduation
   end
 
   def get_hs_district_against_data(district_name)
     district = district_repo.find_by_name(district_name[:against])
-    district.enrollment.graduation_rate_by_year
+    district.enrollment.high_school_graduation
   end
 
   def kindergarten_participation_rate_variation_trend(d_one, d_two)
@@ -124,7 +130,7 @@ class HeadcountAnalyst
     if !(data_1[k] == 0 || data_2[k] == 0)
       ratios[k] = truncate_to_three_digits(data_1[k] / data_2[k])
     else
-      ratios[k] = "Can't compute."
+      ratios[k] = nil # "Can't compute."
     end
   end
 

@@ -19,7 +19,7 @@ class HeadcountAnalystTest < Minitest::Test
     })
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 1.071, ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+    assert_equal 1.070, ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
   end
 
   def test_kindergarten_participation_rate_variation_with_nil_data
@@ -31,7 +31,7 @@ class HeadcountAnalystTest < Minitest::Test
     })
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal "Can't compute.", ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+    assert_equal nil, ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
   end
 
   def test_kindergarten_participation_rate_variation_different_districts
@@ -55,7 +55,7 @@ class HeadcountAnalystTest < Minitest::Test
     })
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal "Can't compute.", ha.kindergarten_participation_rate_variation('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
+    assert_equal nil, ha.kindergarten_participation_rate_variation('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
   end
 
   def test_kindergarten_participation_rate_variation_trend_different_districts
@@ -66,7 +66,7 @@ class HeadcountAnalystTest < Minitest::Test
       }
     })
     ha = HeadcountAnalyst.new(dr)
-    expected = {2006 => 0.791, 2007 => 0.646}
+    expected = {2006 => 0.792, 2007 => 0.647}
     assert_equal expected, ha.kindergarten_participation_rate_variation_trend('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
   end
 
@@ -78,7 +78,7 @@ class HeadcountAnalystTest < Minitest::Test
       }
     })
     ha = HeadcountAnalyst.new(dr)
-    expected = {2006 => "Can't compute.", 2007 => "Can't compute."}
+    expected = {2006 => nil, 2007 => nil}
     assert_equal expected, ha.kindergarten_participation_rate_variation_trend('ADAMS COUNTY 14', :against => 'ADAMS-ARAPAHOE 28J')
   end
 
@@ -92,7 +92,7 @@ class HeadcountAnalystTest < Minitest::Test
     })
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 1.071, ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+    assert_equal 1.070, ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
   end
 
   def test_kindergarten_participation_against_high_school_graduation
@@ -105,7 +105,7 @@ class HeadcountAnalystTest < Minitest::Test
     })
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 0.875, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+    assert_equal 0.874, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
   end
 
   def test_kindergarten_participation_correlates_with_high_school_graduation
@@ -117,8 +117,9 @@ class HeadcountAnalystTest < Minitest::Test
       }
     })
     ha = HeadcountAnalyst.new(dr)
-    # assert ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "ACADEMY 20")
-    assert ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J"])
+    assert_equal nil, ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "ACADEMY 20")
+    refute ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J"])
+    refute ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "COLORADO")
   end
 
   def test_ratios_by_year
