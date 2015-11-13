@@ -1,6 +1,6 @@
-# Analyzes data from district repository
-
 require 'pry'
+
+# Analyzes data from district repository
 class HeadcountAnalyst
   attr_reader :district_repo
 
@@ -45,43 +45,35 @@ class HeadcountAnalyst
 
   def kindergarten_participation_correlates_with_high_school_graduation(dist_opts)
     if dist_opts[:for] == "COLORADO"
-      names = district_repo.district_names - ["COLORADO"]
-      kindergarten_participation_correlates_with_high_school_graduation({:across => names})
-      # special case: Gather answers for all districts **except** colorado
-      # do thing for :across => ["all", "non", "colorado", "districts"]
-      # kindergarten_participation_correlates_with_high_school_graduation(:across => ["Dist 1", "Dist 2"])
+      correlation_for_all_districts
     elsif dist_opts[:across]
-      info = dist_opts[:across].map { |dist_name|
-        kindergarten_participation_correlates_with_high_school_graduation(:for => dist_name)}.compact
-        # binding.pry
-      (info.count(true) / info.length.to_f) > 0.7
-      # do thing for each district individually
-      # if 70% + of those are true, then answer true
+      correlation_for_multiple_districts?(dist_opts[:across])
     else
-      number = kindergarten_participation_against_high_school_graduation(dist_opts[:for])
-      if !number.nil?
-        number > 0.6 && number < 1.5
-      else
-        nil
-      end
-      # :for => "ACADEMY 20"
-      # do thing for 1 district
-      # get rate for this district
-      # check if it's between 0.6 and 1.5
+      correlation_for_single_district?(dist_opts[:for])
     end
   end
 
-  # def correlation_for_single_district?(district_name)
-  #   kindergarten_participation_against_high_school_graduation(district_name)
-  #   number > 0.6 || number < 1.5
-  # end
-  #
-  # def correlation_for_multiple_districts?(dnames)
-  #   info = dnames.map do |dist_name|
-  #     correlation_for_single_district?(dist_name)
-  #   end
-  #   (info.count(true) / info.length.to_f) > 0.7
-  # end
+  def correlation_for_all_districts
+    names = district_repo.district_names - ["COLORADO"]
+    kindergarten_participation_correlates_with_high_school_graduation({:across => names})
+  end
+
+  def correlation_for_single_district?(district_name)
+    number = kindergarten_participation_against_high_school_graduation(district_name)
+    if !number.nil?
+      number > 0.6 && number < 1.5
+    else
+      nil
+    end
+  end
+
+  def correlation_for_multiple_districts?(dnames)
+    info = dnames.map do |dist_name|
+      kindergarten_participation_correlates_with_high_school_graduation(:for => dist_name)
+    end
+    info = info.compact
+    (info.count(true) / info.length.to_f) > 0.7
+  end
 
   def average(numbers)
     numbers.reduce(:+) / numbers.length
