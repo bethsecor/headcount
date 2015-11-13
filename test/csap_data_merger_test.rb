@@ -32,7 +32,7 @@ class CSAPDataMergerTest < Minitest::Test
                    {:all_students=>
                      {2011=>{:math=>0.5573, :reading=>0.68, :writing=>0.5531}, 2012=>{:math=>0.558, :reading=>0.6932, :writing=>0.5404}},
                     :asian=>
-                     {2011=>{:math=>0.7094, :reading=>0.7384, :writing=>0.6569}, 2012=>{:math=>0.7192, :reading=>0.7574, :writing=>0.8658}}}},
+                     {2011=>{:math=>0.7094, :reading=>0.7482, :writing=>0.6569}, 2012=>{:math=>0.7192, :reading=>0.7574, :writing=>0.6588}}}},
                  {:name=>"ACADEMY 20",
                   :csap_data=>
                    {:all_students=>

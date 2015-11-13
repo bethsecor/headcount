@@ -24,8 +24,7 @@ class CSAPDataMerger
   end
 
   def district_names
-    # binding.pry
-    [math_data.keys + reading_data.keys + writing_data.keys].uniq
+    [math_data.keys + reading_data.keys + writing_data.keys].flatten.uniq
   end
 
   def merge_csap_data

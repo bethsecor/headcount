@@ -12,7 +12,7 @@ class DataByRaceEthnicityParserTest < Minitest::Test
   end
 
   def test_parse_returns_hash_of_hashes_of_hashes
-    parser = DataByRaceEthnicityParser.new("./test/fixtures/proficiency_on_CSAP_sample.csv", :math)
+    parser = DataByRaceEthnicityParser.new("./test/fixtures/proficiency_on_CSAP_sample_math.csv", :math)
     expected = {"COLORADO" =>
                 {:all_students => {2011 => {:math => 0.5573}, 2012 => {:math => 0.558}},
                 :asian => {2011 => {:math => 0.7094}, 2012 => {:math => 0.7192}},
