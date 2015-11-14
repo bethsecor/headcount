@@ -1,5 +1,15 @@
 require 'pry'
 
+class InsufficientInformationError < StandardError
+  # "A grade must be provided to answer this question" if !grade_subject_hash.keys.include?(:grade)
+  # "A subject must be provided to answer this question" if !grade_subject_hash.keys.include?(:subject)
+end
+
+class UnknownDataError < StandardError
+  # "#{grade_given} is not a known grade" if !grade_subject_hash[:grade].values.include?(3) || !grade_subject_hash[:grade].values.include?(8)
+  # "#{subject_given} is not a known subject" if  !grade_subject_hash[:subject].values.include?(:math) || !grade_subject_hash[:subject].values.include?(:reading)|| !grade_subject_hash[:subject].values.include?(:writing)
+end
+
 # Analyzes data from district repository
 class HeadcountAnalyst
   attr_reader :district_repo
@@ -123,6 +133,12 @@ class HeadcountAnalyst
       ratios[k] = truncate_to_three_digits(data_1[k] / data_2[k])
     else
       ratios[k] = nil # "Can't compute."
+    end
+  end
+
+  def top_statewide_test_year_over_year_growth(grade_subject_hash)
+    unless grade_subject_hash.keys.include?(:grade)
+      raise InsufficientInformationError, "A grade must be provided to answer this question"
     end
   end
 

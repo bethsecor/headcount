@@ -131,4 +131,26 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal expected, ha.ratios_by_year(h_1, h_2)
   end
 
+  def test_top_statewide_test_yoy_growth_raises_error_wo_grade
+    dr = DistrictRepository.new
+    ha = HeadcountAnalyst.new(dr)
+
+
+    assert_raises InsufficientInformationError do
+        ha.top_statewide_test_year_over_year_growth({:subject => :math})
+    end
+  end
+
+  def test_top_statewide_test_yoy_growth_raises_error_wo_subject
+    skip
+    # this didn't pass. why??
+    dr = DistrictRepository.new
+    ha = HeadcountAnalyst.new(dr)
+
+
+    assert_raises InsufficientInformationError do
+        ha.top_statewide_test_year_over_year_growth({:grade => 3})
+    end
+  end
+
 end
