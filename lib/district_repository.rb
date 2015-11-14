@@ -13,7 +13,7 @@ class DistrictRepository
   def load_data(data_path_hash)
     send_enrollment_data(data_path_hash) if data_path_hash.keys.include?(:enrollment)
     send_statewide_test_data(data_path_hash) if data_path_hash.keys.include?(:statewide_testing)
-    @district_names = @district_names.flatten
+    @district_names = @district_names.flatten.uniq
     create_districts(data_path_hash)
     @district_names
   end

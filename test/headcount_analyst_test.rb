@@ -119,7 +119,7 @@ class HeadcountAnalystTest < Minitest::Test
     ha = HeadcountAnalyst.new(dr)
     assert_equal nil, ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "ACADEMY 20")
     refute ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J"])
-    refute ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "COLORADO")
+    refute ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
   end
 
   def test_ratios_by_year

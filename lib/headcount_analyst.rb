@@ -44,7 +44,7 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(dist_opts)
-    if dist_opts[:for] == "COLORADO"
+    if dist_opts[:for] == "STATEWIDE"
       correlation_for_all_districts
     elsif dist_opts[:across]
       correlation_for_multiple_districts?(dist_opts[:across])

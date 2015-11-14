@@ -24,10 +24,27 @@ class DistrictRepositoryTest < Minitest::Test
       }
     })
     expected = ["COLORADO", "ACADEMY 20"]
-    puts dr.inspect
+
     assert_equal expected, dr.district_names
   end
 
+  def test_load_all_sample_data
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample.csv",
+        :high_school_graduation => "./test/fixtures/high_school_grad_sample.csv" },
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_data_sample.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv",
+        :math => "./test/fixtures/csap_data/math_data_sample.csv",
+        :reading => "./test/fixtures/csap_data/reading_data_sample.csv",
+        :writing => "./test/fixtures/csap_data/writing_data_sample.csv"}
+        })
+    expected = ["COLORADO", "ACADEMY 20", "ADAMS COUNTY 14","ADAMS-ARAPAHOE 28J"]
+
+    assert_equal expected, dr.district_names
+  end
 
   def test_create_districts
     dr = DistrictRepository.new
