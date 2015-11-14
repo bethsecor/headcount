@@ -25,7 +25,6 @@ class StatewideTest
     raise UnknownDataError unless [:math, :reading, :writing].include?(subject) && [:asian, :black,
       :pacific_islander, :hispanic, :native_american, :two_or_more, :white, :all_students].include?(race) &&
       [2011, 2012, 2013, 2014].include?(year)
-      binding.pry
     truncate_to_three_digits(csap_data[race][year][subject])
   end
 
