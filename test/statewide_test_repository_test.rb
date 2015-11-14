@@ -26,4 +26,17 @@ class StatewideTestRepositoryTest < Minitest::Test
     st = sr.find_by_name("ACADEMY 20")
     assert_equal "ACADEMY 20", st.name
   end
+
+  def test_load_data
+    sr = StatewideTestRepository.new
+    assert_equal  0, sr.statewide_tests.count
+    path = {:statewide_testing => {
+    :third_grade => "./test/fixtures/grade_data/3grade_data_sample.csv",
+    :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv",
+    :math => "./test/fixtures/csap_data/math_data_sample.csv",
+    :reading => "./test/fixtures/csap_data/reading_data_sample.csv",
+    :writing => "./test/fixtures/csap_data/writing_data_sample.csv"}}
+    sr.load_data(path)
+    assert_equal  2, sr.statewide_tests.count
+  end
 end

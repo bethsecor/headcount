@@ -8,6 +8,7 @@ class EnrollmentRepository
   attr_reader :enrollments, :merger
   def initialize
     @merger = UnionMerger.new
+    @enrollments = []
   end
 
   def load_data(data_path_hash)
@@ -49,14 +50,14 @@ class EnrollmentRepository
   end
 
   def find_by_name(district_name)
-    @enrollments.select { |e| e.name == district_name.upcase }[0]
+    enrollments.select { |e| e.name == district_name.upcase }[0]
   end
 
   def find_all_matching(string)
-    @enrollments.select { |e| e.name.include?(string.upcase) }
+    enrollments.select { |e| e.name.include?(string.upcase) }
   end
 
   def district_names
-    @enrollments.map(&:name)
+    enrollments.map(&:name)
   end
 end

@@ -8,11 +8,11 @@ class GradeDataMerger
   end
 
   def third_grade
-    DataBySubjectParser.new(full_path_hash[:statewide_testing][:math], :math).parse if full_path_hash[:statewide_testing].keys.include?(:math)
+    DataBySubjectParser.new(full_path_hash[:statewide_testing][:third_grade], :third_grade).parse if full_path_hash[:statewide_testing].keys.include?(:third_grade)
   end
 
   def eighth_grade
-    DataBySubjectParser.new(full_path_hash[:statewide_testing][:reading], :reading).parse if full_path_hash[:statewide_testing].keys.include?(:reading)
+    DataBySubjectParser.new(full_path_hash[:statewide_testing][:eighth_grade], :eighth_grade).parse if full_path_hash[:statewide_testing].keys.include?(:eighth_grade)
   end
 
   def deep_merge(h_1, h_2)
@@ -20,12 +20,12 @@ class GradeDataMerger
   end
 
   def district_names
-    [math_data.keys + reading_data.keys + writing_data.keys].flatten.uniq
+    [third_grade.keys + eighth_grade.keys].flatten.uniq
   end
 
-  def merge_csap_data
+  def merge_grade_data
     district_names.map do |district|
-      {:name => district, :csap_data => deep_merge(deep_merge(math_data[district], reading_data[district]),writing_data[district])}
+      {:name => district, :grade_data => deep_merge(third_grade[district], eighth_grade[district])}
     end
   end
 end

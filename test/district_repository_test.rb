@@ -12,8 +12,22 @@ class DistrictRepositoryTest < Minitest::Test
       }
     })
     expected = ["COLORADO", "ACADEMY 20"]
+    puts dr.inspect
     assert_equal expected, dr.district_names
   end
+
+  def test_load_sample_data
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/kindergarten_sample.csv"
+      }
+    })
+    expected = ["COLORADO", "ACADEMY 20"]
+    puts dr.inspect
+    assert_equal expected, dr.district_names
+  end
+
 
   def test_create_districts
     dr = DistrictRepository.new
@@ -76,6 +90,19 @@ class DistrictRepositoryTest < Minitest::Test
     })
     district = dr.find_by_name("ACADEMY 20")
     assert_equal 0.391,  district.enrollment.kindergarten_participation_in_year(2007)
+  end
+
+  def test_statewide_testing_object_relationship
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_data_sample.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    district = dr.find_by_name("ACADEMY 20")
+
+    assert_equal 0.857, district.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
   end
 
   def test_kindergarten_participation_returns_nil_if_NA

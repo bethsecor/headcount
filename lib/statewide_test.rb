@@ -28,23 +28,17 @@ class StatewideTest
     truncate_to_three_digits(csap_data[race][year][subject])
   end
 
-  #
-  # def kindergarten_participation_by_year
-  #   truncate_hash_values(kindergarten_participation)
-  # end
-  #
-  # def kindergarten_participation_in_year(year)
-  #   truncate_to_three_digits(kindergarten_participation[year])
-  # end
-  #
-  # def graduation_rate_by_year
-  #   truncate_hash_values(high_school_graduation)
-  # end
-  #
-  # def graduation_rate_in_year(year)
-  #   truncate_to_three_digits(high_school_graduation[year])
-  # end
-  #
+  def proficient_by_grade(grade)
+    dictionary = {3 => :third_grade, 8 => :eighth_grade}
+    raise UnknownDataError unless dictionary.keys.include?(grade)
+    truncate_hash_values(grade_data[dictionary[grade]])
+  end
+
+  def proficient_for_subject_by_grade_in_year(subject, grade, year)
+    raise UnknownDataError unless [:math, :reading, :writing].include?(subject) && [2008, 2009, 2010, 2011, 2012, 2013, 2014].include?(year)
+    proficient_by_grade(grade)[year][subject]
+  end
+
   def truncate_to_three_digits(value)
     (value * 1000).truncate.to_f / 1000 unless value.nil?
   end

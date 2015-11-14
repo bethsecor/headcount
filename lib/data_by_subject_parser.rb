@@ -12,10 +12,13 @@ class DataBySubjectParser
     csv_opener.each do |line|
       district_name = line[:location].upcase
       subject = line[:score].downcase.to_sym
+
+
       create_new_key_for_district(district_name, data)
-      create_new_key_for_subject(district_name, subject, data)
-      create_new_key_for_year(district_name, subject, data, line)
-      add_subject_data_by_year(district_name, subject, data, line)
+      create_new_key_for_grade(district_name, grade, data)
+      create_new_key_for_year(district_name, grade, line, data)
+      create_new_key_for_subject(district_name, grade, line, data)
+      add_year_data_by_subject(district_name, grade, line, data)
     end
     data
   end
@@ -28,16 +31,20 @@ class DataBySubjectParser
     data[dist_name] = {} unless data.key?(dist_name)
   end
 
-  def create_new_key_for_subject(dist_name, subject, data)
-    data[dist_name][subject] = {} unless data[dist_name].key?(subject)
+  def create_new_key_for_grade(dist_name, grade, data)
+    data[dist_name][grade] = {} unless data[dist_name].key?(grade)
   end
 
-  def create_new_key_for_year(dist_name, subject, data, line)
-    data[dist_name][subject][line[:timeframe].to_i] = {} unless data[dist_name][subject].key?(line[:timeframe].to_i)
+  def create_new_key_for_year(dist_name, grade, line, data)
+    data[dist_name][grade][line[:timeframe].to_i] = {} unless data[dist_name][grade].key?(line[:timeframe].to_i)
   end
 
-  def add_subject_data_by_year(dist_name, subject, data, line)
-    data[dist_name][subject][line[:timeframe].to_i][subject] = clean_participation(line[:data])
+  def create_new_key_for_subject(dist_name, grade, line, data)
+    data[dist_name][grade][line[:timeframe].to_i][line[:score].downcase.to_sym] = {} unless data[dist_name][grade][line[:timeframe].to_i].key?(line[:score].downcase.to_sym)
+  end
+
+  def add_year_data_by_subject(dist_name, grade, line, data)
+    data[dist_name][grade][line[:timeframe].to_i][line[:score].downcase.to_sym] = clean_participation(line[:data])
   end
 
   def clean_participation(data)
