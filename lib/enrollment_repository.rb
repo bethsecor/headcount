@@ -5,34 +5,20 @@ require 'pry'
 
 # Holds all enrollment instances
 class EnrollmentRepository
-  attr_reader :enrollments, :merger, :full_data
+  attr_reader :enrollments, :merger
   def initialize
     @merger = UnionMerger.new
-    # @full_data = []
   end
 
   def load_data(data_path_hash)
-    # {:enrollment => { :kindergarten => "./test/fixtures/kindergarten_sample.csv" } }
     loaded_data = [load_kindergarten_data(data_path_hash),
                    load_hs_data(data_path_hash)].compact
-
     full_data_merged = merge_data(loaded_data)
-
     create_enrollments!(full_data_merged)
     full_data_merged
   end
 
   def merge_data(loaded_data)
-    # [kindergarten data , hs data]
-    # [[{:name => "Pizza", :kindergarten_participation => {}}],
-    #  [{:name => "pizza", :hs_participation => {}}]
-    # ]
-    # have information relevant to the same districts in each collection
-    # need to:
-    #   1. collect/group those things together by districts
-    #   2. merge them back together into a single hash for that district
-    # Alternative:
-    # (kinder_data + hs_data).group_by { |hash| hash[:name] }.map { |dist_name, dist_hashes| dist_hashes.reduce(:merge) }
     full_data = []
     loaded_data.each do |data|
       full_data = @merger.merge(full_data, data) # if !data.nil?

@@ -8,15 +8,15 @@ class CSAPDataMerger
   end
 
   def math_data
-    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:math], :math).parse
+    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:math], :math).parse if full_path_hash[:statewide_testing].keys.include?(:math)
   end
 
   def reading_data
-    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:reading], :reading).parse
+    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:reading], :reading).parse if full_path_hash[:statewide_testing].keys.include?(:reading)
   end
 
   def writing_data
-    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:writing], :writing).parse
+    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:writing], :writing).parse if full_path_hash[:statewide_testing].keys.include?(:writing)
   end
 
   def deep_merge(h_1, h_2)

@@ -9,7 +9,7 @@ class DataByRaceEthnicityParserTest < Minitest::Test
     parser = DataByRaceEthnicityParser.new("./test/fixtures/proficiency_on_CSAP_sample.csv", :math)
 
     assert parser.respond_to?(:parse)
-  end
+end
 
   def test_parse_returns_hash_of_hashes_of_hashes
     parser = DataByRaceEthnicityParser.new("./test/fixtures/proficiency_on_CSAP_sample_math.csv", :math)
