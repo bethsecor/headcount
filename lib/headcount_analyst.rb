@@ -68,6 +68,14 @@ class HeadcountAnalyst
     kindergarten_participation_correlates_with_high_school_graduation({:across => names})
   end
 
+  def correlation_for_multiple_districts?(dnames)
+    info = dnames.map do |dist_name|
+      kindergarten_participation_correlates_with_high_school_graduation(:for => dist_name)
+    end
+    info = info.compact
+    (info.count(true) / info.length.to_f) > 0.7
+  end
+
   def correlation_for_single_district?(district_name)
     number = kindergarten_participation_against_high_school_graduation(district_name)
     if !number.nil?
@@ -75,14 +83,6 @@ class HeadcountAnalyst
     else
       nil
     end
-  end
-
-  def correlation_for_multiple_districts?(dnames)
-    info = dnames.map do |dist_name|
-      kindergarten_participation_correlates_with_high_school_graduation(:for => dist_name)
-    end
-    info = info.compact
-    (info.count(true) / info.length.to_f) > 0.7
   end
 
   def average(numbers)
@@ -136,9 +136,53 @@ class HeadcountAnalyst
     end
   end
 
+  def dictionary
+    {3 => :third_grade, 8 => :eighth_grade}
+  end
+
   def top_statewide_test_year_over_year_growth(grade_subject_hash)
+    check_for_input_error(grade_subject_hash)
+    dist_calcs = []
+    district_repo.district_names.each do |dist|
+    subject_data = get_subject_data(dist, grade_subject_hash)
+    dist_calcs << [district_repo.find_by_name(dist).name, calculate_differences(subject_data)] unless subject_data.nil?
+    end
+    num_dists = grade_subject_hash.fetch(:top, 1)
+    results = dist_calcs.sort_by { |dist, data| data }[-num_dists..-1]
+    results.reverse!
+    results = results.flatten if results.length == 1
+    results
+  end
+
+  def get_subject_data(dist, grade_subject_hash)
+    unless get_grade_data(dist, grade_subject_hash).nil?
+      get_grade_data(dist, grade_subject_hash).map do |year, data|         data[grade_subject_hash[:subject]]
+    end
+    end
+  end
+
+  def get_grade_data(dist, grade_subject_hash)
+    d = district_repo.find_by_name(dist)
+    d.statewide_testing.grade_data[dictionary[grade_subject_hash[:grade]]]
+  end
+
+  def calculate_differences(array, differences = [])
+    if array.length >=2
+      differences << (array[-1] - array[-2])
+      array.pop
+      calculate_differences(array, differences)
+    else
+      truncate_to_three_digits(differences.reduce(:+) / differences.length)
+    end
+  end
+
+  def check_for_input_error(grade_subject_hash)
     unless grade_subject_hash.keys.include?(:grade)
       raise InsufficientInformationError, "A grade must be provided to answer this question"
+    end
+
+    unless [3,8].any? { |valid_grade| grade_subject_hash[:grade] == valid_grade }
+      raise UnknownDataError, "#{grade_subject_hash[:grade]} is not a known grade."
     end
   end
 

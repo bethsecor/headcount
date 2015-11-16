@@ -16,7 +16,14 @@ class GradeDataMerger
   end
 
   def deep_merge(h_1, h_2)
-    h_1.merge(h_2) { |key, h_1_elem, h_2_elem| deep_merge(h_1_elem, h_2_elem) }
+    if h_2.nil?
+      h_1
+    elsif h_1.nil?
+      h_2
+    else
+      h_1.merge(h_2) { |key, h_1_elem, h_2_elem| deep_merge(h_1_elem, h_2_elem) }
+    end
+
   end
 
   def district_names

@@ -136,21 +136,56 @@ class HeadcountAnalystTest < Minitest::Test
     ha = HeadcountAnalyst.new(dr)
 
 
-    assert_raises InsufficientInformationError do
+    e = assert_raises InsufficientInformationError do
         ha.top_statewide_test_year_over_year_growth({:subject => :math})
     end
+
+    assert_equal "A grade must be provided to answer this question", e.message
   end
 
-  def test_top_statewide_test_yoy_growth_raises_error_wo_subject
-    skip
-    # this didn't pass. why??
+  def test_top_statewide_test_yoy_growth_raises_error_with_invalid_grade
     dr = DistrictRepository.new
     ha = HeadcountAnalyst.new(dr)
 
 
-    assert_raises InsufficientInformationError do
-        ha.top_statewide_test_year_over_year_growth({:grade => 3})
+    e = assert_raises UnknownDataError do
+        ha.top_statewide_test_year_over_year_growth({:grade => 4})
     end
+
+    assert_equal "4 is not a known grade.", e.message
+  end
+
+  def test_top_statewide_yoy_growth_returns_top_district
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal ["ACADEMY 20", -0.004],  ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+  end
+
+  def test_top_statewide_yoy_growth_returns_top_districts
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal [["ACADEMY 20", -0.004], ["ADAMS-ARAPAHOE 28J", -0.009], ["ADAMS COUNTY 14", -0.045]],  ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+  end
+
+  def test_calculate_differences
+    dr = DistrictRepository.new
+    ha = HeadcountAnalyst.new(dr)
+
+    data = [1, 3, 6, 10]
+    assert_equal 3, ha.calculate_differences(data)
+
   end
 
 end
