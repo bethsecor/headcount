@@ -1,13 +1,9 @@
 require 'pry'
 
 class InsufficientInformationError < StandardError
-  # "A grade must be provided to answer this question" if !grade_subject_hash.keys.include?(:grade)
-  # "A subject must be provided to answer this question" if !grade_subject_hash.keys.include?(:subject)
 end
 
 class UnknownDataError < StandardError
-  # "#{grade_given} is not a known grade" if !grade_subject_hash[:grade].values.include?(3) || !grade_subject_hash[:grade].values.include?(8)
-  # "#{subject_given} is not a known subject" if  !grade_subject_hash[:subject].values.include?(:math) || !grade_subject_hash[:subject].values.include?(:reading)|| !grade_subject_hash[:subject].values.include?(:writing)
 end
 
 # Analyzes data from district repository
@@ -33,7 +29,8 @@ class HeadcountAnalyst
 
   def calculate_rate_variation(district_one_data, district_two_data)
     if validate_data(district_one_data) && validate_data(district_two_data)
-      truncate_to_three_digits(average(district_one_data) / average(district_two_data))
+      ratio_average = average(district_one_data) / average(district_two_data)
+      truncate_to_three_digits(ratio_average)
     else
       nil # "Can't compute."
     end
@@ -49,35 +46,38 @@ class HeadcountAnalyst
 
   def kindergarten_participation_against_high_school_graduation(name)
     unless kindergarten_variation(name).nil? || graduation_variation(name).nil?
-      truncate_to_three_digits(kindergarten_variation(name) / graduation_variation(name))
+      ratio_average = kindergarten_variation(name) / graduation_variation(name)
+      truncate_to_three_digits(ratio_average)
     end
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(dist_opts)
-    if dist_opts[:for] == "STATEWIDE"
+  def kindergarten_participation_correlates_with_high_school_graduation(d_opts)
+    if d_opts[:for] == "STATEWIDE"
       correlation_for_all_districts
-    elsif dist_opts[:across]
-      correlation_for_multiple_districts?(dist_opts[:across])
+    elsif d_opts[:across]
+      correlation_for_multiple_districts?(d_opts[:across])
     else
-      correlation_for_single_district?(dist_opts[:for])
+      correlation_for_single_district?(d_opts[:for])
     end
   end
 
   def correlation_for_all_districts
     names = district_repo.district_names - ["COLORADO"]
-    kindergarten_participation_correlates_with_high_school_graduation({:across => names})
+    kindergarten_participation_correlates_with_high_school_graduation(
+      {:across => names})
   end
 
   def correlation_for_multiple_districts?(dnames)
     info = dnames.map do |dist_name|
-      kindergarten_participation_correlates_with_high_school_graduation(:for => dist_name)
+      kindergarten_participation_correlates_with_high_school_graduation(
+        :for => dist_name)
     end
     info = info.compact
     (info.count(true) / info.length.to_f) > 0.7
   end
 
-  def correlation_for_single_district?(district_name)
-    number = kindergarten_participation_against_high_school_graduation(district_name)
+  def correlation_for_single_district?(d_name)
+    number = kindergarten_participation_against_high_school_graduation(d_name)
     if !number.nil?
       number > 0.6 && number < 1.5
     else
@@ -145,18 +145,21 @@ class HeadcountAnalyst
     dist_calcs = []
     district_repo.district_names.each do |dist|
     subject_data = get_subject_data(dist, grade_subject_hash)
-    dist_calcs << [district_repo.find_by_name(dist).name, calculate_differences(subject_data)] unless subject_data.nil?
+    unless subject_data.nil?
+      dist_calcs << [district_repo.find_by_name(dist).name,
+                     calculate_differences(subject_data)]
+    end
     end
     num_dists = grade_subject_hash.fetch(:top, 1)
-    results = dist_calcs.sort_by { |dist, data| data }[-num_dists..-1]
-    results.reverse!
+    results = dist_calcs.sort_by { |dist, data| data }[-num_dists..-1].reverse!
     results = results.flatten if results.length == 1
     results
   end
 
   def get_subject_data(dist, grade_subject_hash)
     unless get_grade_data(dist, grade_subject_hash).nil?
-      get_grade_data(dist, grade_subject_hash).map do |year, data|         data[grade_subject_hash[:subject]]
+      get_grade_data(dist, grade_subject_hash).map do |year, data|
+        data[grade_subject_hash[:subject]]
     end
     end
   end
@@ -178,11 +181,15 @@ class HeadcountAnalyst
 
   def check_for_input_error(grade_subject_hash)
     unless grade_subject_hash.keys.include?(:grade)
-      raise InsufficientInformationError, "A grade must be provided to answer this question"
+      raise InsufficientInformationError,
+      "A grade must be provided to answer this question"
     end
 
-    unless [3,8].any? { |valid_grade| grade_subject_hash[:grade] == valid_grade }
-      raise UnknownDataError, "#{grade_subject_hash[:grade]} is not a known grade."
+    unless [3,8].any? do |valid_grade|
+      grade_subject_hash[:grade] == valid_grade
+    end
+      raise UnknownDataError,
+      "#{grade_subject_hash[:grade]} is not a known grade."
     end
   end
 

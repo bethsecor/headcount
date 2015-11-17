@@ -28,19 +28,25 @@ class EnrollmentRepository
   end
 
   def load_kindergarten_data(data_path_hash)
-    kindergarten_data(data_path_hash) if data_path_hash[:enrollment].keys.include?(:kindergarten)
+    if data_path_hash[:enrollment].keys.include?(:kindergarten)
+      kindergarten_data(data_path_hash)
+    end
   end
 
   def load_hs_data(data_path_hash)
-    high_school_graduation_data(data_path_hash) if data_path_hash[:enrollment].keys.include?(:high_school_graduation)
+    if data_path_hash[:enrollment].keys.include?(:high_school_graduation)
+      high_school_graduation_data(data_path_hash)
+    end
   end
 
-  def kindergarten_data(data_path_hash)
-    DataByYearParser.new(data_path_hash[:enrollment][:kindergarten]).format_kindergarten_data
+  def kindergarten_data(data_path)
+    kd = DataByYearParser.new(data_path[:enrollment][:kindergarten])
+    kd.format_kindergarten_data
   end
 
-  def high_school_graduation_data(data_path_hash)
-    DataByYearParser.new(data_path_hash[:enrollment][:high_school_graduation]).format_hs_graduation_data
+  def high_school_graduation_data(data_path)
+    hs = DataByYearParser.new(data_path[:enrollment][:high_school_graduation])
+    hs.format_hs_graduation_data
   end
 
   def create_enrollments!(full_data)

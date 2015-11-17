@@ -21,12 +21,16 @@ class StatewideTestRepository
 
   def load_csap_data(data_path_hash)
     path_keys = data_path_hash[:statewide_testing].keys
-    CSAPDataMerger.new(data_path_hash).merge_csap_data if path_keys.include?(:math) && path_keys.include?(:reading) && path_keys.include?(:writing)
+    if [:math, :reading, :writing].all? { |s| path_keys.include? s }
+      CSAPDataMerger.new(data_path_hash).merge_csap_data
+    end
   end
 
   def load_grade_data(data_path_hash)
     path_keys = data_path_hash[:statewide_testing].keys
-    GradeDataMerger.new(data_path_hash).merge_grade_data if path_keys.include?(:third_grade) && path_keys.include?(:eighth_grade)
+    if path_keys.include?(:third_grade) && path_keys.include?(:eighth_grade)
+      GradeDataMerger.new(data_path_hash).merge_grade_data
+    end
   end
 
   def merge_data(loaded_data)

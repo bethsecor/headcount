@@ -8,11 +8,17 @@ class GradeDataMerger
   end
 
   def third_grade
-    DataBySubjectParser.new(full_path_hash[:statewide_testing][:third_grade], :third_grade).parse if full_path_hash[:statewide_testing].keys.include?(:third_grade)
+    if full_path_hash[:statewide_testing].keys.include?(:third_grade)
+      DataBySubjectParser.new(
+      full_path_hash[:statewide_testing][:third_grade], :third_grade).parse
+    end
   end
 
   def eighth_grade
-    DataBySubjectParser.new(full_path_hash[:statewide_testing][:eighth_grade], :eighth_grade).parse if full_path_hash[:statewide_testing].keys.include?(:eighth_grade)
+    if full_path_hash[:statewide_testing].keys.include?(:eighth_grade)
+      DataBySubjectParser.new(
+      full_path_hash[:statewide_testing][:eighth_grade], :eighth_grade).parse
+    end
   end
 
   def deep_merge(h_1, h_2)
@@ -21,7 +27,7 @@ class GradeDataMerger
     elsif h_1.nil?
       h_2
     else
-      h_1.merge(h_2) { |key, h_1_elem, h_2_elem| deep_merge(h_1_elem, h_2_elem) }
+      h_1.merge(h_2) { |k, h_1_elem, h_2_elem| deep_merge(h_1_elem, h_2_elem) }
     end
 
   end
@@ -32,7 +38,8 @@ class GradeDataMerger
 
   def merge_grade_data
     district_names.map do |district|
-      {:name => district, :grade_data => deep_merge(third_grade[district], eighth_grade[district])}
+      {:name => district,
+       :grade_data => deep_merge(third_grade[district], eighth_grade[district])}
     end
   end
 end

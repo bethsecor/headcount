@@ -10,28 +10,30 @@ class DistrictRepository
     @district_names = []
   end
 
-  def load_data(data_path_hash)
-    send_enrollment_data(data_path_hash) if data_path_hash.keys.include?(:enrollment)
-    send_statewide_test_data(data_path_hash) if data_path_hash.keys.include?(:statewide_testing)
+  def load_data(data_path)
+    send_enrollment_data(data_path) if data_path.keys.include?(:enrollment)
+    if data_path.keys.include?(:statewide_testing)
+      send_statewide_test_data(data_path)
+    end
     @district_names = @district_names.flatten.uniq
-    create_districts(data_path_hash)
+    create_districts(data_path)
     @district_names
   end
 
-  def create_districts(data_path_hash)
+  def create_districts(data_path)
     @districts = district_names.map do |district|
-      # binding.pry
-      District.new({ :name => district,:enrollment => get_enrollment_object(district, data_path_hash),:statewide_testing => get_statewide_test_object(district, data_path_hash)})
-                     # :statewide_testing => get_statewide_test_object(district)
+      District.new({ :name => district,
+        :enrollment => get_enrollment_object(district, data_path),
+        :statewide_testing => get_statewide_test_object(district, data_path)})
     end
   end
 
-  def get_enrollment_object(district, data_path_hash)
-    er.find_by_name(district) if data_path_hash.keys.include?(:enrollment)
+  def get_enrollment_object(district, data_path)
+    er.find_by_name(district) if data_path.keys.include?(:enrollment)
   end
 
-  def get_statewide_test_object(district, data_path_hash)
-    str.find_by_name(district) if data_path_hash.keys.include?(:statewide_testing)
+  def get_statewide_test_object(district, data_path)
+    str.find_by_name(district) if data_path.keys.include?(:statewide_testing)
   end
 
   def find_by_name(district_name)

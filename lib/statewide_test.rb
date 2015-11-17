@@ -1,12 +1,5 @@
-# Holds all enrollment data for a given district
-
-class UnknownDataError < StandardError
-end
-
-class UnknownRaceError < StandardError
-end
-
 require 'pry'
+# Holds all enrollment data for a given district
 class StatewideTest
   attr_reader :name, :csap_data, :grade_data
   def initialize(testing_data)
@@ -22,8 +15,10 @@ class StatewideTest
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-    raise UnknownDataError unless [:math, :reading, :writing].include?(subject) && [:asian, :black,
-      :pacific_islander, :hispanic, :native_american, :two_or_more, :white, :all_students].include?(race) &&
+    valid_subjects = [:math, :reading, :writing]
+    raise UnknownDataError unless valid_subjects.include?(subject) &&
+      [:asian, :black, :pacific_islander, :hispanic, :native_american,
+       :two_or_more, :white, :all_students].include?(race) &&
       [2011, 2012, 2013, 2014].include?(year)
     truncate_to_three_digits(csap_data[race][year][subject])
   end
@@ -35,7 +30,9 @@ class StatewideTest
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    raise UnknownDataError unless [:math, :reading, :writing].include?(subject) && [2008, 2009, 2010, 2011, 2012, 2013, 2014].include?(year)
+    valid_subjects = [:math, :reading, :writing]
+    raise UnknownDataError unless valid_subjects.include?(subject) &&
+      [2008, 2009, 2010, 2011, 2012, 2013, 2014].include?(year)
     proficient_by_grade(grade)[year][subject]
   end
 
@@ -44,6 +41,15 @@ class StatewideTest
   end
 
   def truncate_hash_values(data)
-    data.map { |k,v| [k,v.map { |k2, v2| [k2, truncate_to_three_digits(v2)] }.to_h ] }.to_h
+    result = data.map do |k, v|
+      [k,v.map {|k2,v2| [k2, truncate_to_three_digits(v2)]}.to_h]
+    end
+    result.to_h
   end
+end
+
+class UnknownDataError < StandardError
+end
+
+class UnknownRaceError < StandardError
 end

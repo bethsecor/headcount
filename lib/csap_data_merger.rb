@@ -8,15 +8,24 @@ class CSAPDataMerger
   end
 
   def math_data
-    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:math], :math).parse if full_path_hash[:statewide_testing].keys.include?(:math)
+    if full_path_hash[:statewide_testing].keys.include?(:math)
+      DataByRaceEthnicityParser.new(
+        full_path_hash[:statewide_testing][:math], :math).parse
+    end
   end
 
   def reading_data
-    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:reading], :reading).parse if full_path_hash[:statewide_testing].keys.include?(:reading)
+    if full_path_hash[:statewide_testing].keys.include?(:reading)
+      DataByRaceEthnicityParser.new(
+        full_path_hash[:statewide_testing][:reading], :reading).parse
+    end
   end
 
   def writing_data
-    DataByRaceEthnicityParser.new(full_path_hash[:statewide_testing][:writing], :writing).parse if full_path_hash[:statewide_testing].keys.include?(:writing)
+    if full_path_hash[:statewide_testing].keys.include?(:writing)
+      DataByRaceEthnicityParser.new(
+        full_path_hash[:statewide_testing][:writing], :writing).parse
+    end
   end
 
   def deep_merge(h_1, h_2)
@@ -29,7 +38,9 @@ class CSAPDataMerger
 
   def merge_csap_data
     district_names.map do |district|
-      {:name => district, :csap_data => deep_merge(deep_merge(math_data[district], reading_data[district]),writing_data[district])}
+      {:name => district,
+       :csap_data => deep_merge(deep_merge(math_data[district],
+        reading_data[district]),writing_data[district])}
     end
   end
 end

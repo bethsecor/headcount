@@ -11,7 +11,8 @@ class DataByRaceEthnicityParser
     data = {}
     csv_opener.each do |line|
       district_name = line[:location].upcase
-      ethnicity = line[:race_ethnicity].split("/").last.gsub(" ", "_").downcase.to_sym
+      ethnicity = line[:race_ethnicity].split("/").last.gsub(" ", "_")
+      ethnicity = ethnicity.downcase.to_sym
       create_new_key_for_district(district_name, data)
       create_new_key_for_race_ethnicity(district_name, ethnicity, data)
       create_new_key_for_year(district_name, ethnicity, data, line)
@@ -29,15 +30,20 @@ class DataByRaceEthnicityParser
   end
 
   def create_new_key_for_race_ethnicity(dist_name, race_ethnicity, data)
-    data[dist_name][race_ethnicity] = {} unless data[dist_name].key?(race_ethnicity)
+    unless data[dist_name].key?(race_ethnicity)
+      data[dist_name][race_ethnicity] = {}
+    end
   end
 
   def create_new_key_for_year(dist_name, race_ethnicity, data, line)
-    data[dist_name][race_ethnicity][line[:timeframe].to_i] = {} unless data[dist_name][race_ethnicity].key?(line[:timeframe].to_i)
+    unless data[dist_name][race_ethnicity].key?(line[:timeframe].to_i)
+      data[dist_name][race_ethnicity][line[:timeframe].to_i] = {}
+    end
   end
 
   def add_race_ethnicity_data_by_year(dist_name, race_ethnicity, data, line)
-    data[dist_name][race_ethnicity][line[:timeframe].to_i][subject] = clean_participation(line[:data])
+    year_key = data[dist_name][race_ethnicity][line[:timeframe].to_i]
+    year_key[subject] = clean_participation(line[:data])
   end
 
   def clean_participation(data)
