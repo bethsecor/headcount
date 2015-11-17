@@ -136,68 +136,104 @@ class HeadcountAnalyst
 
   def top_statewide_test_year_over_year_growth(grade_subject_hash)
     check_for_input_error(grade_subject_hash)
+    weights = grade_subject_hash.fetch(:weighting, {:math => 1/3.0, :reading  => 1/3.0, :writing  => 1/3.0})
     if grade_subject_hash.key?(:subject)
-      growths = calculate_growth_for_single_subject(grade_subject_hash)
-    else
-      growths = calclate_weighted_yoy_growth(grade_subject_hash)
-    end
-
-    if grade_subject_hash.key?(:top)
-      growths
-    else
-      growth_top = growths.map { |dist, num| num }.reduce(:+)
-      [ growths.first.first, truncate_to_three_digits(growth_top) ]
+      growths = calculate_growth_for_single_subject(grade_subject_hash[:subject], grade_subject_hash[:grade], grade_subject_hash.fetch(:top, 1))
+    elsif !grade_subject_hash.key?(:subject)
+      calculate_growth_for_all_subjects(grade_subject_hash[:grade], weights)
     end
   end
 
-  def calclate_weighted_yoy_growth(grade_subject_hash)
-    weights = grade_subject_hash.fetch(:weighting, {:math => 1.0/3,
-                                                    :reading => 1.0/3,
-                                                    :writing => 1.0/3})
-    [:math, :reading, :writing].map do |subj|
-      sub_hash = {:subject => subj}
-      dw = calculate_growth_for_single_subject(grade_subject_hash.merge(sub_hash)).map do |dist, num|
-        [ dist, num * weights[subj] ]
+  def calculate_weighted_yoy_growth(grade, district, weights)
+    subject_diffs = [:math, :reading, :writing].map do |subj|
+      subject_data = get_subject_data(district, subj, grade)
+      # binding.pry
+      unless subject_data.nil?
+      calculate_differences(subject_data) * weights[subj]
       end
-      dw.flatten
     end
+    subject_diffs = subject_diffs.compact
+    [district, subject_diffs.reduce(:+)]
   end
 
-  def calculate_growth_for_single_subject(grade_subject_hash)
+  def calculate_growth_for_all_subjects(grade, weights)
     dist_calcs = []
     district_repo.district_names.each do |dist|
-    subject_data = get_subject_data(dist, grade_subject_hash)
+      diffs = calculate_weighted_yoy_growth(grade, dist, weights)
+      # binding.pry
+      dist_calcs << diffs unless diffs.last.nil?
+    end
+    dist_calcs.sort_by { |dist, data| data }.last.flatten
+  end
+
+  def calculate_growth_for_single_subject(subject, grade, top)
+    dist_calcs = []
+    district_repo.district_names.each do |dist|
+    subject_data = get_subject_data(dist, subject, grade)
     unless subject_data.nil?
-      dist_calcs << [district_repo.find_by_name(dist).name,
-                     calculate_differences(subject_data)]
+      diffs = calculate_differences(subject_data)
+      dist_calcs << [dist,
+                     diffs] unless diffs.nil?
     end
     end
-    num_dists = grade_subject_hash.fetch(:top, 1)
-    results = dist_calcs.sort_by { |dist, data| data }[-num_dists..-1].reverse!
-    # results = results.flatten if results.length == 1
+    results = dist_calcs.sort_by { |dist, data| data }.reverse!.first(top)
+    results = results.flatten if results.length == 1
     results
   end
 
-  def get_subject_data(dist, grade_subject_hash)
-    unless get_grade_data(dist, grade_subject_hash).nil?
-      get_grade_data(dist, grade_subject_hash).map do |year, data|
-        data[grade_subject_hash[:subject]]
+  # def top_statewide_test_year_over_year_growth(grade_subject_hash)
+  #   check_for_input_error(grade_subject_hash)
+  #   if grade_subject_hash.key?(:subject)
+  #     growths = calculate_growth_for_single_subject(grade_subject_hash)
+  #   else
+  #     growths = calculate_weighted_yoy_growth(grade_subject_hash)
+  #   end
+  #   binding.pry
+  #   if grade_subject_hash.key?(:top)
+  #     growths
+  #   else
+  #     growth_top = growths.map { |dist, num| num }.reduce(:+)
+  #     [ growths.first.first, truncate_to_three_digits(growth_top) ]
+  #   end
+  # end
+  #
+  # def calculate_weighted_yoy_growth(grade_subject_hash)
+  #   weights = grade_subject_hash.fetch(:weighting, {:math => 1.0/3,
+  #                                                   :reading => 1.0/3,
+  #                                                   :writing => 1.0/3})
+  #   [:math, :reading, :writing].map do |subj|
+  #     sub_hash = {:subject => subj}
+  #     dw = calculate_growth_for_single_subject(grade_subject_hash.merge(sub_hash)).map do |dist, num|
+  #       [ dist, num * weights[subj] ]
+  #     end
+  #     dw.flatten
+  #   end
+  # end
+  #
+
+
+  def get_subject_data(dist, subject, grade)
+    grade_data = get_grade_data(dist, subject, grade)
+    unless grade_data.nil?
+      grade_data.map do |year, data|
+        data[subject]
     end
     end
   end
 
-  def get_grade_data(dist, grade_subject_hash)
+  def get_grade_data(dist, subject, grade)
     d = district_repo.find_by_name(dist)
-    d.statewide_testing.grade_data[dictionary[grade_subject_hash[:grade]]]
+    d.statewide_testing.grade_data[dictionary[grade]]
   end
 
   def calculate_differences(array, differences = [])
+    array = array.compact
     if array.length >=2
       differences << (array[-1] - array[-2])
       array.pop
       calculate_differences(array, differences)
     else
-      truncate_to_three_digits(differences.reduce(:+) / differences.length)
+      truncate_to_three_digits(differences.reduce(:+) / differences.length) unless differences.empty?
     end
   end
 

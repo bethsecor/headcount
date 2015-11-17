@@ -22,6 +22,7 @@ class GradeDataMerger
   end
 
   def deep_merge(h_1, h_2)
+    puts "DEEP MERGE"
     if h_2.nil?
       h_1
     elsif h_1.nil?
@@ -29,7 +30,6 @@ class GradeDataMerger
     else
       h_1.merge(h_2) { |k, h_1_elem, h_2_elem| deep_merge(h_1_elem, h_2_elem) }
     end
-
   end
 
   def district_names
@@ -37,6 +37,7 @@ class GradeDataMerger
   end
 
   def merge_grade_data
+    puts "MERGE GRADE DATA"
     district_names.map do |district|
       {:name => district,
        :grade_data => deep_merge(third_grade[district], eighth_grade[district])}
