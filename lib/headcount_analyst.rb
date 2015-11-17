@@ -1,11 +1,5 @@
 require 'pry'
 
-class InsufficientInformationError < StandardError
-end
-
-class UnknownDataError < StandardError
-end
-
 # Analyzes data from district repository
 class HeadcountAnalyst
   attr_reader :district_repo
@@ -142,6 +136,37 @@ class HeadcountAnalyst
 
   def top_statewide_test_year_over_year_growth(grade_subject_hash)
     check_for_input_error(grade_subject_hash)
+    if grade_subject_hash.key?(:subject)
+      growths = calculate_growth_for_single_subject(grade_subject_hash)
+    else
+      growths = calclate_weighted_yoy_growth(grade_subject_hash)
+    end
+
+    if grade_subject_hash.key?(:top)
+      growths
+    else
+      growth_top = growths.map { |dist, num| num }.reduce(:+)
+      [ growths.first.first, truncate_to_three_digits(growth_top) ]
+    end
+  end
+
+  def calclate_weighted_yoy_growth(grade_subject_hash)
+    weights = grade_subject_hash.fetch(:weighting, {:math => 1.0/3,
+                                                    :reading => 1.0/3,
+                                                    :writing => 1.0/3})
+    [:math, :reading, :writing].map do |subj|
+      sub_hash = {:subject => subj}
+      dw = calculate_growth_for_single_subject(grade_subject_hash.merge(sub_hash)).map do |dist, num|
+              # binding.pry
+        [ dist, num * weights[subj] ]
+      end
+      dw.flatten
+    end
+  end
+
+  # [["dist1", 0.3828], ["dist1", 0.3828], ["dist1", 0.3828]]
+
+  def calculate_growth_for_single_subject(grade_subject_hash)
     dist_calcs = []
     district_repo.district_names.each do |dist|
     subject_data = get_subject_data(dist, grade_subject_hash)
@@ -152,7 +177,7 @@ class HeadcountAnalyst
     end
     num_dists = grade_subject_hash.fetch(:top, 1)
     results = dist_calcs.sort_by { |dist, data| data }[-num_dists..-1].reverse!
-    results = results.flatten if results.length == 1
+    # results = results.flatten if results.length == 1
     results
   end
 
@@ -200,4 +225,10 @@ class HeadcountAnalyst
   # def truncate_hash_values(data)
   #   data.map { |k,v| [k,truncate_to_three_digits(v)] }.to_h
   # end
+end
+
+class InsufficientInformationError < StandardError
+end
+
+class UnknownDataError < StandardError
 end

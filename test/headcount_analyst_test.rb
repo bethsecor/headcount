@@ -122,6 +122,19 @@ class HeadcountAnalystTest < Minitest::Test
     refute ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
   end
 
+  def test_kindergarten_participation_correlates_with_high_school_graduation_full_data
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./data/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./data/High school graduation rates.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+  
+    refute ha.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
+  end
+
   def test_ratios_by_year
     dr = DistrictRepository.new
     ha = HeadcountAnalyst.new(dr)
@@ -186,6 +199,18 @@ class HeadcountAnalystTest < Minitest::Test
     data = [1, 3, 6, 10]
     assert_equal 3, ha.calculate_differences(data)
 
+  end
+
+  def test_top_statewide_yoy_growth_returns_weighted_sum_for_top_dist
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal ["ACADEMY 20", -0.002],  ha.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
   end
 
 end
