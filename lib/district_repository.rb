@@ -1,7 +1,6 @@
-require './lib/district'
-require './lib/enrollment_repository'
-require './lib/statewide_test_repository'
-require 'pry'
+require_relative 'district'
+require_relative 'enrollment_repository'
+require_relative 'statewide_test_repository'
 
 # Holds all district instances
 class DistrictRepository

@@ -1,5 +1,5 @@
-require './lib/data_by_race_ethnicity_parser'
-require 'pry'
+require_relative 'data_by_race_ethnicity_parser'
+
 class CSAPDataMerger
   attr_reader :full_path_hash
 

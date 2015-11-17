@@ -1,7 +1,7 @@
-require './lib/statewide_test'
-require './lib/csap_data_merger'
-require './lib/grade_data_merger'
-require './lib/union_merger'
+require_relative 'statewide_test'
+require_relative 'csap_data_merger'
+require_relative 'grade_data_merger'
+require_relative 'union_merger'
 require 'pry'
 
 class StatewideTestRepository
@@ -27,6 +27,7 @@ class StatewideTestRepository
   end
 
   def load_grade_data(data_path_hash)
+
     path_keys = data_path_hash[:statewide_testing].keys
     if path_keys.include?(:third_grade) && path_keys.include?(:eighth_grade)
       GradeDataMerger.new(data_path_hash).merge_grade_data

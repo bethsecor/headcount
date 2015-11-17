@@ -1,4 +1,4 @@
-require './lib/data_by_subject_parser'
+require_relative 'data_by_subject_parser'
 require 'pry'
 class GradeDataMerger
   attr_reader :full_path_hash

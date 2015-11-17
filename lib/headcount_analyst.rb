@@ -157,14 +157,11 @@ class HeadcountAnalyst
     [:math, :reading, :writing].map do |subj|
       sub_hash = {:subject => subj}
       dw = calculate_growth_for_single_subject(grade_subject_hash.merge(sub_hash)).map do |dist, num|
-              # binding.pry
         [ dist, num * weights[subj] ]
       end
       dw.flatten
     end
   end
-
-  # [["dist1", 0.3828], ["dist1", 0.3828], ["dist1", 0.3828]]
 
   def calculate_growth_for_single_subject(grade_subject_hash)
     dist_calcs = []
