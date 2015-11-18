@@ -49,4 +49,11 @@ class DataByYearParser
         high_school_graduation: Hash[value.sort_by { |year, prct| year}] }
       end
   end
+
+  def format_title_i_data
+    parse.map do |key, value|
+      { name: key,
+        title_i: Hash[value.sort_by { |year, prct| year}] }
+      end
+  end
 end

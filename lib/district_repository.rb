@@ -4,7 +4,7 @@ require_relative 'statewide_test_repository'
 
 # Holds all district instances
 class DistrictRepository
-  attr_reader :district_names, :districts, :er, :str
+  attr_reader :district_names, :districts, :er, :str, :epr
   def initialize
     @district_names = []
   end
@@ -21,7 +21,6 @@ class DistrictRepository
   end
 
   def create_districts(data_path)
-    puts "Creating districts"
     @districts = district_names.map do |district|
       District.new({ :name => district,
         :enrollment => get_enrollment_object(district, data_path),
@@ -30,17 +29,18 @@ class DistrictRepository
   end
 
   def get_enrollment_object(district, data_path)
-    puts "Getting an enrollment object"
     er.find_by_name(district) if data_path.keys.include?(:enrollment)
   end
 
   def get_statewide_test_object(district, data_path)
-    puts "Getting a statewide test object"
     str.find_by_name(district) if data_path.keys.include?(:statewide_testing)
   end
 
+  def get_economic_profile_object(district, data_path)
+    epr.find_by_name(district) if data_path.keys.include?(:economic_profile)
+  end
+
   def find_by_name(district_name)
-    puts "Finding a district"
     @districts.select { |d| d.name == district_name.upcase }[0]
   end
 
@@ -49,21 +49,22 @@ class DistrictRepository
   end
 
   def send_enrollment_data(data_path_hash)
-    puts "Sending enrollment data"
-    # if data_path_hash.keys.include?(:enrollment)
-      @er = EnrollmentRepository.new
-      er.load_data(data_path_hash)
-      @district_names << er.district_names
-    # end
+    @er = EnrollmentRepository.new
+    er.load_data(data_path_hash)
+    @district_names << er.district_names
   end
 
   def send_statewide_test_data(data_path_hash)
-    puts "Sending statewide data"
-    # binding.pry
-    # if data_path_hash.keys.include?(:statewide_testing)
-      @str = StatewideTestRepository.new
-      str.load_data(data_path_hash)
-      @district_names << str.district_names
-    end
-  # end
+    @str = StatewideTestRepository.new
+    str.load_data(data_path_hash)
+    @district_names << str.district_names
+  end
+
+  def send_economic_profile_data(data_path_hash)
+    @epr = EconomicProfileRepository.new
+    epr.load_data(data_path_hash)
+    @district_names << epr.district_names
+  end
+
+
 end
