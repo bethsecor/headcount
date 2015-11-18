@@ -9,11 +9,7 @@ class UnionMerger
   def join(data_1, data_2)
     data_1.map do |hash_1|
       match = data_2.find { |hash_2| hash_1[:name] == hash_2[:name] }
-      if match.nil?
-        hash_1
-      else
-        hash_1.merge(match)
-      end
+      match.nil? ? hash_1 : hash_1.merge(match)
     end
   end
 

@@ -172,6 +172,10 @@ class HeadcountAnalyst
       diffs = calculate_weighted_yoy_growth(grade, dist, weights)
       dist_calcs << diffs unless diffs.last.nil?
     end
+    format_yoy_growth_multi_subj(dist_calcs)
+  end
+
+  def format_yoy_growth_multi_subj(dist_calcs)
     result = dist_calcs.sort_by { |dist, data| data }.last.flatten
     [result[0], truncate_to_three_digits(result[1])]
   end
@@ -179,13 +183,16 @@ class HeadcountAnalyst
   def calculate_growth_for_single_subject(subject, grade, top)
     dist_calcs = []
     district_repo.district_names.each do |dist|
-    subject_data = get_subject_data(dist, subject, grade)
-    unless subject_data.nil?
-      diffs = calculate_differences(subject_data)
-      dist_calcs << [dist,
-                     truncate_to_three_digits(diffs)] unless diffs.nil?
+      subject_data = get_subject_data(dist, subject, grade)
+      unless subject_data.nil?
+        diffs = calculate_differences(subject_data)
+        dist_calcs << [dist, truncate_to_three_digits(diffs)] unless diffs.nil?
+      end
     end
-    end
+    format_you_growth_single_subj(dist_calcs, top)
+  end
+
+  def format_you_growth_single_subj(dist_calcs, top)
     results = dist_calcs.sort_by { |dist, data| data }.reverse!.first(top)
     results = results.flatten if results.length == 1
     results
@@ -196,7 +203,7 @@ class HeadcountAnalyst
     unless grade_data.nil?
       grade_data.map do |year, data|
         data[subject]
-    end
+      end
     end
   end
 
@@ -205,16 +212,17 @@ class HeadcountAnalyst
     d.statewide_test.grade_data[dictionary[grade]]
   end
 
-  def new_calculate_differences
-  end
-
   def calculate_differences(array, differences = [])
     unless array.empty? || array.all? { |elem| elem.nil? }
     final_arr = remove_nils_at_ends(array)
       if final_arr.compact.length >=2
-        (final_arr.compact.last - final_arr.compact.first) / (final_arr.length - 1)
+        calculate_change_over_time(final_arr)
       end
     end
+  end
+
+  def calculate_change_over_time(final_arr)
+    (final_arr.compact.last - final_arr.compact.first) / (final_arr.length - 1)
   end
 
   def remove_nils_at_ends(array)
@@ -229,18 +237,23 @@ class HeadcountAnalyst
     end
   end
 
-
   def check_for_input_error(grade_subject_hash)
+    check_for_information_error(grade_subject_hash)
+    check_for_data_error(grade_subject_hash)
+  end
+
+  def check_for_information_error(grade_subject_hash)
     unless grade_subject_hash.keys.include?(:grade)
       raise InsufficientInformationError,
       "A grade must be provided to answer this question"
     end
+  end
 
+  def check_for_data_error(grade_subject_hash)
     unless [3,8].any? do |valid_grade|
       grade_subject_hash[:grade] == valid_grade
-    end
-      raise UnknownDataError,
-      "#{grade_subject_hash[:grade]} is not a known grade."
+      end
+      raise UnknownDataError, "#{grade_subject_hash[:grade]} is not a known grade."
     end
   end
 

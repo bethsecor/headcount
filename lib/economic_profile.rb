@@ -46,12 +46,12 @@ class EconomicProfile
 
   def children_in_poverty_in_year(year)
     raise UnknownDataError unless children_in_poverty.keys.flatten.include?(year)
-    children_in_poverty[year]
+    truncate_to_three_digits(children_in_poverty[year])
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
     raise UnknownDataError unless free_or_reduced_price_lunch.keys.flatten.include?(year)
-    free_or_reduced_price_lunch[year][:percentage]
+    truncate_to_three_digits(free_or_reduced_price_lunch[year][:percentage])
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
@@ -61,7 +61,11 @@ class EconomicProfile
 
   def title_i_in_year(year)
     raise UnknownDataError unless title_i.keys.flatten.include?(year)
-    title_i[year]
+    truncate_to_three_digits(title_i[year])
+  end
+
+  def truncate_to_three_digits(value)
+    (value * 1_000).truncate.to_f / 1_000 unless value.nil?
   end
 end
 

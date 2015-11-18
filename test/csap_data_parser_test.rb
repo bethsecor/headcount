@@ -5,7 +5,7 @@ require 'pry'
 
 class CSAPDataParserTest < Minitest::Test
 
-  def test_fuuuuuuuck_this
+  def test_parse_and_format_sample_data
     parser = CSAPDataParser.new({:math => "./test/fixtures/csap_data/math_data_sample.csv",
     :reading => "./test/fixtures/csap_data/reading_data_sample.csv",
     :writing => "./test/fixtures/csap_data/writing_data_sample.csv"})
@@ -25,12 +25,11 @@ class CSAPDataParserTest < Minitest::Test
     assert_equal expected, parser.read_and_format_csap
   end
 
-  def test_fuuuuuuuck_this_full_data
+  def test_parse_and_format_full_data
     parser = CSAPDataParser.new({:math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
     :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
     :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"})
 
     assert_equal 181, parser.read_and_format_csap.count
   end
-
 end

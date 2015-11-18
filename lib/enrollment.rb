@@ -1,7 +1,7 @@
 # Holds all enrollment data for a given district
 class Enrollment
   attr_reader :name, :kindergarten_participation, :high_school_graduation
-  
+
   def initialize(enroll_data)
     @name                       = enroll_data[:name]
     @kindergarten_participation = enroll_data[:kindergarten_participation]
@@ -25,7 +25,7 @@ class Enrollment
   end
 
   def truncate_to_three_digits(value)
-    (value * 1000).truncate.to_f / 1000 unless value.nil?
+    (value * 1_000).truncate.to_f / 1_000 unless value.nil?
   end
 
   def truncate_hash_values(data)
