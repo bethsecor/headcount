@@ -169,31 +169,31 @@ class HeadcountAnalystTest < Minitest::Test
 
     assert_equal "4 is not a known grade.", e.message
   end
-  #
-  # def test_top_statewide_yoy_growth_returns_top_district
-  #   dr = DistrictRepository.new
-  #   dr.load_data({
-  #     :statewide_testing => {
-  #       :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
-  #       :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
-  #     }
-  #   })
-  #   ha = HeadcountAnalyst.new(dr)
-  #   assert_equal ["ACADEMY 20", -0.004],  ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
-  # end
-  #
-  # def test_top_statewide_yoy_growth_returns_weighted_sum_top_district_ouray
-  #   dr = DistrictRepository.new
-  #   dr.load_data({
-  #     :statewide_testing => {
-  #       :third_grade => "./test/fixtures/grade_data/three_dist_3rd_grade.csv",
-  #       :eighth_grade => "./test/fixtures/grade_data/three_dist_8th_grade.csv"
-  #     }
-  #   })
-  #   ha = HeadcountAnalyst.new(dr)
-  #   assert_equal ["OURAY R-1", 0.307],
-  #   ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-  # end
+
+  def test_top_statewide_yoy_growth_returns_top_district
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal ["ACADEMY 20", -0.004],  ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+  end
+
+  def test_top_statewide_yoy_growth_returns_weighted_sum_top_district_ouray
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/three_dist_3rd_grade.csv",
+        :eighth_grade => "./test/fixtures/grade_data/three_dist_8th_grade.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal ["OURAY R-1", 0.153],
+    ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+  end
 
   def district_repo
     dr = DistrictRepository.new
@@ -215,71 +215,67 @@ class HeadcountAnalystTest < Minitest::Test
   def test_top_statewide_yoy_growth_returns_weighted_sum_top_district_ouray_full_data
     dr = district_repo
     ha = HeadcountAnalyst.new(dr)
-
-    # ouray = dr.find_by_name("OURAY R-1")
-    # binding.pry
     assert_equal ["OURAY R-1", 0.153],
     ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
   end
 
-  # def test_top_statewide_yoy_growth_returns_top_districts
-  #   dr = DistrictRepository.new
-  #   dr.load_data({
-  #     :statewide_testing => {
-  #       :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
-  #       :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
-  #     }
-  #   })
-  #   ha = HeadcountAnalyst.new(dr)
-  #   assert_equal [["ACADEMY 20", -0.004], ["ADAMS-ARAPAHOE 28J", -0.009], ["ADAMS COUNTY 14", -0.045]],  ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
-  # end
-  #
-  # def test_calculate_weighted_yoy_growth
-  #     dr = DistrictRepository.new
-  #     dr.load_data({
-  #       :statewide_testing => {
-  #         :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
-  #         :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
-  #       }
-  #     })
-  #     ha = HeadcountAnalyst.new(dr)
-  #     assert_equal ["ACADEMY 20", -0.003],  ha.calculate_weighted_yoy_growth(3, "ACADEMY 20", {:math => 1/3.0, :reading  => 1/3.0, :writing  => 1/3.0})
-  # end
+  def test_top_statewide_yoy_growth_returns_top_districts
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal [["ACADEMY 20", -0.004], ["ADAMS-ARAPAHOE 28J", -0.009], ["ADAMS COUNTY 14", -0.045]],  ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+  end
 
-  # def test_calculate_growth_for_all_subjects
-  #   dr = DistrictRepository.new
-  #   dr.load_data({
-  #     :statewide_testing => {
-  #       :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
-  #       :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
-  #     }
-  #   })
-  #   ha = HeadcountAnalyst.new(dr)
-  #   assert_equal ["ACADEMY 20", -0.003],  ha.calculate_growth_for_all_subjects(3, {:math => 1/3.0, :reading  => 1/3.0, :writing  => 1/3.0})
-  #
-  # end
-  #
-  # def test_calculate_differences
-  #   dr = DistrictRepository.new
-  #   ha = HeadcountAnalyst.new(dr)
-  #
-  #   data = [1, 3, 6, 10]
-  #   assert_equal 3, ha.calculate_differences(data)
-  #
-  # end
-  #
-  # def test_top_statewide_yoy_growth_returns_weighted_sum_for_top_dist
-  #   dr = DistrictRepository.new
-  #   dr.load_data({
-  #     :statewide_testing => {
-  #       :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
-  #       :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
-  #     }
-  #   })
-  #   ha = HeadcountAnalyst.new(dr)
-  #   assert_equal ["ACADEMY 20", -0.002],  ha.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-  # end
-  #
+  def test_calculate_weighted_yoy_growth
+      dr = DistrictRepository.new
+      dr.load_data({
+        :statewide_testing => {
+          :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+          :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+        }
+      })
+      ha = HeadcountAnalyst.new(dr)
+      assert_equal ["ACADEMY 20", -0.003],  ha.calculate_weighted_yoy_growth(3, "ACADEMY 20", {:math => 1/3.0, :reading  => 1/3.0, :writing  => 1/3.0})
+  end
+
+  def test_calculate_growth_for_all_subjects
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal ["ACADEMY 20", -0.003],  ha.calculate_growth_for_all_subjects(3, {:math => 1/3.0, :reading  => 1/3.0, :writing  => 1/3.0})
+  end
+
+  def test_calculate_differences
+    dr = DistrictRepository.new
+    ha = HeadcountAnalyst.new(dr)
+
+    data = [1, 3, 6, 10]
+    assert_equal 3, ha.calculate_differences(data)
+
+  end
+
+  def test_top_statewide_yoy_growth_returns_weighted_sum_for_top_dist
+    dr = DistrictRepository.new
+    dr.load_data({
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/grade_data/3grade_sample_three_districts.csv",
+        :eighth_grade => "./test/fixtures/grade_data/8grade_data_sample.csv"
+      }
+    })
+    ha = HeadcountAnalyst.new(dr)
+    assert_equal ["ACADEMY 20", -0.002],  ha.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+  end
+
   def test_remove_nils_at_ends
     dr = DistrictRepository.new
     ha = HeadcountAnalyst.new(dr)

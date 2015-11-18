@@ -149,7 +149,7 @@ class HeadcountAnalyst
   def calculate_weighted_yoy_growth(grade, district, weights)
     subject_diffs = [:math, :reading, :writing].map do |subj|
       subject_data = get_subject_data(district, subj, grade)
-      unless subject_data.compact.empty?
+      unless subject_data.nil? || subject_data.compact.empty?
         r = calculate_differences(subject_data)
         r * weights[subj] unless r.nil?
       end
@@ -160,7 +160,7 @@ class HeadcountAnalyst
   def format_yoy_growth(district, subject_diffs)
     subject_diffs = subject_diffs.compact
     if subject_diffs
-      [district, subject_diffs.reduce(:+)]
+      [district, truncate_to_three_digits(subject_diffs.reduce(:+))]
     else
       [district, "N/A"]
     end
