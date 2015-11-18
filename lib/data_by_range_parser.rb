@@ -46,11 +46,11 @@ class DataByYearRangeParser
     data == '0' || data.to_i > 0
   end
 
-  # def format_kindergarten_data
-  #   parse.map do |key, value|
-  #     { name: key,
-  #       kindergarten_participation: Hash[value.sort_by { |year, prct| year}] }
-  #     end
-  # end
+  def format_year_range_data
+    parse.map do |key, value|
+      { name: key,
+        median_household_income: Hash[value.sort_by { |year, prct| year}] }
+      end
+  end
 
 end

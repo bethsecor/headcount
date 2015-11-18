@@ -6,7 +6,7 @@ class GradeDataParser
     @path = path
   end
 
-  def fuuuuuuuck_this
+  def parse
   third_grade_csv = CSV.open(@path[:third_grade], headers: true, header_converters: :symbol)
   eighth_grade_csv = CSV.open(@path[:eighth_grade], headers: true, header_converters: :symbol)
   all_csv_data = {:third_grade => third_grade_csv, :eighth_grade => eighth_grade_csv}
@@ -63,7 +63,7 @@ class GradeDataParser
   end
 
   def read_and_format_grade
-    fuuuuuuuck_this.map do |key, value|
+    parse.map do |key, value|
         { name: key,
           grade_data: value }
       end

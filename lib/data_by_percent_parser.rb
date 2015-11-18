@@ -38,17 +38,11 @@ class DataByPercentParser
     data == '0' || data.to_f > 0
   end
 
-  def format_kindergarten_data
+  def format_poverty_data
     parse.map do |key, value|
       { name: key,
-        kindergarten_participation: Hash[value.sort_by { |year, prct| year}] }
+        children_in_poverty: Hash[value.sort_by { |year, prct| year }] }
       end
   end
 
-  def format_hs_graduation_data
-    parse.map do |key, value|
-      { name: key,
-        high_school_graduation: Hash[value.sort_by { |year, prct| year}] }
-      end
-  end
 end

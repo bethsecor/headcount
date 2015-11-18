@@ -4,7 +4,7 @@ class CSAPDataParser
     @path = path
   end
 
-  def fuuuuuuuck_this
+  def parse
   math_csv = CSV.open(@path[:math], headers: true, header_converters: :symbol)
   reading_csv = CSV.open(@path[:reading], headers: true, header_converters: :symbol)
   writing_csv = CSV.open(@path[:writing], headers: true, header_converters: :symbol)
@@ -34,7 +34,7 @@ class CSAPDataParser
       #
       # year_key = data[district_name][race_ethnicity][line[:timeframe].to_i]
       # year_key[subject] = clean_participation(line[:data])
-      
+
       create_new_key_for_district(district_name, data)
       create_new_key_for_race_ethnicity(district_name, race_ethnicity, data)
       create_new_key_for_year(district_name, race_ethnicity, data, line)
@@ -75,7 +75,7 @@ class CSAPDataParser
   end
 
   def read_and_format_csap
-    fuuuuuuuck_this.map do |key, value|
+    parse.map do |key, value|
         { name: key,
           csap_data: value }
       end
