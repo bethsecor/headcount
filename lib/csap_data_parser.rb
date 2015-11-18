@@ -5,44 +5,29 @@ class CSAPDataParser
   end
 
   def parse
-  math_csv = CSV.open(@path[:math], headers: true, header_converters: :symbol)
-  reading_csv = CSV.open(@path[:reading], headers: true, header_converters: :symbol)
-  writing_csv = CSV.open(@path[:writing], headers: true, header_converters: :symbol)
-
-  all_csv_data = {:math => math_csv, :reading => reading_csv, :writing => writing_csv}
-
   data = {}
-  all_csv_data.each do |subject, array_of_lines|
+  get_csv_data.each do |subject, array_of_lines|
     array_of_lines.each do |line|
       district_name = line[:location].upcase
-      race_ethnicity = line[:race_ethnicity].split("/").last.gsub(" ", "_")
-      race_ethnicity = race_ethnicity.downcase.to_sym
-
-      # data[district_name] = {} unless data.key?(district_name)
-      #
-      # unless data[district_name].key?(race_ethnicity)
-      #   data[district_name][race_ethnicity] = {}
-      # end
-      #
-      # unless data[district_name].key?(race_ethnicity)
-      #   data[district_name][race_ethnicity] = {}
-      # end
-      #
-      # unless data[district_name][race_ethnicity].key?(line[:timeframe].to_i)
-      #   data[district_name][race_ethnicity][line[:timeframe].to_i] = {}
-      # end
-      #
-      # year_key = data[district_name][race_ethnicity][line[:timeframe].to_i]
-      # year_key[subject] = clean_participation(line[:data])
-
-      create_new_key_for_district(district_name, data)
-      create_new_key_for_race_ethnicity(district_name, race_ethnicity, data)
-      create_new_key_for_year(district_name, race_ethnicity, data, line)
-      add_race_ethnicity_data_by_year(district_name, race_ethnicity, data, line, subject)
-
+      race_ethnicity = line[:race_ethnicity].split("/").last.gsub(" ", "_").downcase.to_sym
+      create_hash_data(district_name, race_ethnicity, data, line, subject)
       end
     end
     data
+  end
+
+  def get_csv_data
+    math_csv = CSV.open(@path[:math], headers: true, header_converters: :symbol)
+    reading_csv = CSV.open(@path[:reading], headers: true, header_converters: :symbol)
+    writing_csv = CSV.open(@path[:writing], headers: true, header_converters: :symbol)
+    {:math => math_csv, :reading => reading_csv, :writing => writing_csv}
+  end
+
+  def create_hash_data(district_name, race_ethnicity, data, line, subject)
+    create_new_key_for_district(district_name, data)
+    create_new_key_for_race_ethnicity(district_name, race_ethnicity, data)
+    create_new_key_for_year(district_name, race_ethnicity, data, line)
+    add_race_ethnicity_data_by_year(district_name, race_ethnicity, data, line, subject)
   end
 
   def create_new_key_for_district(dist_name, data)

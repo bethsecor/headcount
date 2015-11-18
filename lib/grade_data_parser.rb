@@ -7,25 +7,29 @@ class GradeDataParser
   end
 
   def parse
-  third_grade_csv = CSV.open(@path[:third_grade], headers: true, header_converters: :symbol)
-  eighth_grade_csv = CSV.open(@path[:eighth_grade], headers: true, header_converters: :symbol)
-  all_csv_data = {:third_grade => third_grade_csv, :eighth_grade => eighth_grade_csv}
-
   data = {}
-  all_csv_data.each do |grade, array_of_lines|
+  get_csv_data.each do |grade, array_of_lines|
     array_of_lines.each do |line|
       district_name = line[:location].upcase
       subject = line[:score].downcase.to_sym
-
-      create_new_key_for_district(district_name, data)
-      create_new_key_for_grade(district_name, grade, data)
-      create_new_key_for_year(district_name, grade, line, data)
-      create_new_key_for_subject(district_name, grade, line, data)
-      add_year_data_by_subject(district_name, grade, line, data)
-
+      create_hash_data(district_name, grade, line, data)
       end
     end
     data
+  end
+
+  def get_csv_data
+    third_grade_csv = CSV.open(@path[:third_grade], headers: true, header_converters: :symbol)
+    eighth_grade_csv = CSV.open(@path[:eighth_grade], headers: true, header_converters: :symbol)
+    {:third_grade => third_grade_csv, :eighth_grade => eighth_grade_csv}
+  end
+
+  def create_hash_data(district_name, grade, line, data)
+    create_new_key_for_district(district_name, data)
+    create_new_key_for_grade(district_name, grade, data)
+    create_new_key_for_year(district_name, grade, line, data)
+    create_new_key_for_subject(district_name, grade, line, data)
+    add_year_data_by_subject(district_name, grade, line, data)
   end
 
   def create_new_key_for_district(dist_name, data)

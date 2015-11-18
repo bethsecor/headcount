@@ -1,11 +1,11 @@
 # Holds all enrollment data for a given district
-require 'pry'
 class Enrollment
   attr_reader :name, :kindergarten_participation, :high_school_graduation
+  
   def initialize(enroll_data)
-    @name = enroll_data[:name]
+    @name                       = enroll_data[:name]
     @kindergarten_participation = enroll_data[:kindergarten_participation]
-    @high_school_graduation = enroll_data[:high_school_graduation]
+    @high_school_graduation     = enroll_data[:high_school_graduation]
   end
 
   def kindergarten_participation_by_year

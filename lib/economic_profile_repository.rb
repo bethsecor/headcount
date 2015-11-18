@@ -8,24 +8,27 @@ require_relative 'data_by_year_parser'
 class EconomicProfileRepository
   attr_reader :economic_profiles, :merger
   def initialize
-    @merger = UnionMerger.new
+    @merger            = UnionMerger.new
     @economic_profiles = []
   end
 
   def load_data(data_path_hash)
-    loaded_data = [load_median_household_income(data_path_hash),
-                   load_children_in_poverty(data_path_hash),
-                   load_free_or_reduced_price_lunch(data_path_hash),
-                   load_title_i(data_path_hash)].compact
-    full_data_merged = merge_data(loaded_data)
+    full_data_merged = merge_data(concat_data_files(data_path_hash))
     create_economic_profiles!(full_data_merged)
     full_data_merged
   end
 
+  def concat_data_files(data_path_hash)
+    [load_median_household_income(data_path_hash),
+     load_children_in_poverty(data_path_hash),
+     load_free_or_reduced_price_lunch(data_path_hash),
+     load_title_i(data_path_hash)].compact
+   end
+
   def merge_data(loaded_data)
     full_data = []
     loaded_data.each do |data|
-      full_data = @merger.merge(full_data, data) # if !data.nil?
+      full_data = @merger.merge(full_data, data)
     end
     full_data
   end

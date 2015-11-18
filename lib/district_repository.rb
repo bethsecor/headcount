@@ -11,16 +11,16 @@ class DistrictRepository
   end
 
   def load_data(data_path)
-    send_enrollment_data(data_path) if data_path.keys.include?(:enrollment)
-    if data_path.keys.include?(:statewide_testing)
-      send_statewide_test_data(data_path)
-    end
-    if data_path.keys.include?(:economic_profile)
-      send_economic_profile_data(data_path)
-    end
+    check_and_send_repo_data(data_path)
     @district_names = @district_names.flatten.uniq
     create_districts(data_path)
     @district_names
+  end
+
+  def check_and_send_repo_data(data_path)
+    send_enrollment_data(data_path) if data_path.keys.include?(:enrollment)
+    send_statewide_test_data(data_path) if data_path.keys.include?(:statewide_testing)
+    send_economic_profile_data(data_path) if data_path.keys.include?(:economic_profile)
   end
 
   def create_districts(data_path)

@@ -10,14 +10,16 @@ class DataByYearRangeParser
     data = {}
     csv_opener.each do |line|
       district_name = line[:location].upcase
-      create_new_key_for_district(district_name, data)
       date_range = line[:timeframe].split("-").map(&:to_i)
       full_range = Range.new(date_range[0],date_range[1]).to_a
-      create_new_key_for_years(district_name, full_range, data, line)
-
-      # add_participation_data_by_year(district_name, data, line)
+      create_hash_data(district_name, full_range, data, line)
     end
     data
+  end
+
+  def create_hash_data(district_name, full_range, data, line)
+    create_new_key_for_district(district_name, data)
+    create_new_key_for_years(district_name, full_range, data, line)
   end
 
   def csv_opener

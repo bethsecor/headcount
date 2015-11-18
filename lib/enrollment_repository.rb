@@ -7,7 +7,7 @@ require 'pry'
 class EnrollmentRepository
   attr_reader :enrollments, :merger
   def initialize
-    @merger = UnionMerger.new
+    @merger      = UnionMerger.new
     @enrollments = []
   end
 
@@ -22,7 +22,7 @@ class EnrollmentRepository
   def merge_data(loaded_data)
     full_data = []
     loaded_data.each do |data|
-      full_data = @merger.merge(full_data, data) # if !data.nil?
+      full_data = @merger.merge(full_data, data)
     end
     full_data
   end

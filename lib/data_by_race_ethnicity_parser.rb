@@ -3,7 +3,7 @@ require 'csv'
 class DataByRaceEthnicityParser
   attr_reader :subject
   def initialize(path, subject)
-    @path = path
+    @path    = path
     @subject = subject
   end
 
@@ -11,14 +11,17 @@ class DataByRaceEthnicityParser
     data = {}
     csv_opener.each do |line|
       district_name = line[:location].upcase
-      ethnicity = line[:race_ethnicity].split("/").last.gsub(" ", "_")
-      ethnicity = ethnicity.downcase.to_sym
-      create_new_key_for_district(district_name, data)
-      create_new_key_for_race_ethnicity(district_name, ethnicity, data)
-      create_new_key_for_year(district_name, ethnicity, data, line)
-      add_race_ethnicity_data_by_year(district_name, ethnicity, data, line)
+      ethnicity = line[:race_ethnicity].split("/").last.gsub(" ", "_").downcase.to_sym
+      create_hash_data(district_name, ethnicity, data, line)
     end
     data
+  end
+
+  def create_hash_data(district_name, ethnicity, data, line)
+    create_new_key_for_district(district_name, data)
+    create_new_key_for_race_ethnicity(district_name, ethnicity, data)
+    create_new_key_for_year(district_name, ethnicity, data, line)
+    add_race_ethnicity_data_by_year(district_name, ethnicity, data, line)
   end
 
   def csv_opener

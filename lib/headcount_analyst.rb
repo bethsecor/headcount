@@ -26,7 +26,7 @@ class HeadcountAnalyst
       ratio_average = average(district_one_data) / average(district_two_data)
       truncate_to_three_digits(ratio_average)
     else
-      nil # "Can't compute."
+      nil
     end
   end
 
@@ -126,7 +126,7 @@ class HeadcountAnalyst
     if !(data_1[k] == 0 || data_2[k] == 0)
       ratios[k] = truncate_to_three_digits(data_1[k] / data_2[k])
     else
-      ratios[k] = nil # "Can't compute."
+      ratios[k] = nil
     end
   end
 
@@ -149,12 +149,15 @@ class HeadcountAnalyst
   def calculate_weighted_yoy_growth(grade, district, weights)
     subject_diffs = [:math, :reading, :writing].map do |subj|
       subject_data = get_subject_data(district, subj, grade)
-      # binding.pry if district == "OURAY R-1"
       unless subject_data.compact.empty?
         r = calculate_differences(subject_data)
         r * weights[subj] unless r.nil?
       end
     end
+    format_yoy_growth(district, subject_diffs)
+  end
+
+  def format_yoy_growth(district, subject_diffs)
     subject_diffs = subject_diffs.compact
     if subject_diffs
       [district, subject_diffs.reduce(:+)]
@@ -167,7 +170,6 @@ class HeadcountAnalyst
     dist_calcs = []
     district_repo.district_names.each do |dist|
       diffs = calculate_weighted_yoy_growth(grade, dist, weights)
-      # binding.pry
       dist_calcs << diffs unless diffs.last.nil?
     end
     result = dist_calcs.sort_by { |dist, data| data }.last.flatten
@@ -189,37 +191,6 @@ class HeadcountAnalyst
     results
   end
 
-  # def top_statewide_test_year_over_year_growth(grade_subject_hash)
-  #   check_for_input_error(grade_subject_hash)
-  #   if grade_subject_hash.key?(:subject)
-  #     growths = calculate_growth_for_single_subject(grade_subject_hash)
-  #   else
-  #     growths = calculate_weighted_yoy_growth(grade_subject_hash)
-  #   end
-  #   binding.pry
-  #   if grade_subject_hash.key?(:top)
-  #     growths
-  #   else
-  #     growth_top = growths.map { |dist, num| num }.reduce(:+)
-  #     [ growths.first.first, truncate_to_three_digits(growth_top) ]
-  #   end
-  # end
-  #
-  # def calculate_weighted_yoy_growth(grade_subject_hash)
-  #   weights = grade_subject_hash.fetch(:weighting, {:math => 1.0/3,
-  #                                                   :reading => 1.0/3,
-  #                                                   :writing => 1.0/3})
-  #   [:math, :reading, :writing].map do |subj|
-  #     sub_hash = {:subject => subj}
-  #     dw = calculate_growth_for_single_subject(grade_subject_hash.merge(sub_hash)).map do |dist, num|
-  #       [ dist, num * weights[subj] ]
-  #     end
-  #     dw.flatten
-  #   end
-  # end
-  #
-
-
   def get_subject_data(dist, subject, grade)
     grade_data = get_grade_data(dist, subject, grade)
     unless grade_data.nil?
@@ -238,15 +209,6 @@ class HeadcountAnalyst
   end
 
   def calculate_differences(array, differences = [])
-
-    # array = array.compact
-    # if array.length >=2
-    #   differences << (array[-1] - array[-2])
-    #   array.pop
-    #   calculate_differences(array, differences)
-    # else
-    #   truncate_to_three_digits(differences.reduce(:+) / differences.length) unless differences.empty?
-    # end
     unless array.empty? || array.all? { |elem| elem.nil? }
     final_arr = remove_nils_at_ends(array)
       if final_arr.compact.length >=2
@@ -283,13 +245,9 @@ class HeadcountAnalyst
   end
 
   def truncate_to_three_digits(value)
-    # binding.pry if value == nil
     (value * 1000).truncate.to_f / 1000 unless value.nil?
   end
 
-  # def truncate_hash_values(data)
-  #   data.map { |k,v| [k,truncate_to_three_digits(v)] }.to_h
-  # end
 end
 
 class InsufficientInformationError < StandardError
