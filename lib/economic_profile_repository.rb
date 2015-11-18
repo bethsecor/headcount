@@ -84,4 +84,8 @@ class EconomicProfileRepository
     end
   end
 
+  def district_names
+    economic_profiles.map(&:name)
+  end
+
 end

@@ -1,6 +1,7 @@
 require_relative 'district'
 require_relative 'enrollment_repository'
 require_relative 'statewide_test_repository'
+require_relative 'economic_profile_repository'
 
 # Holds all district instances
 class DistrictRepository
@@ -15,6 +16,9 @@ class DistrictRepository
     if data_path.keys.include?(:statewide_testing)
       send_statewide_test_data(data_path)
     end
+    if data_path.keys.include?(:economic_profile)
+      send_economic_profile_data(data_path)
+    end
     @district_names = @district_names.flatten.uniq
     create_districts(data_path)
     @district_names
@@ -24,7 +28,8 @@ class DistrictRepository
     @districts = district_names.map do |district|
       District.new({ :name => district,
         :enrollment => get_enrollment_object(district, data_path),
-        :statewide_testing => get_statewide_test_object(district, data_path)})
+        :statewide_testing => get_statewide_test_object(district, data_path),
+        :economic_profile => get_economic_profile_object(district, data_path)})
     end
   end
 
@@ -65,6 +70,4 @@ class DistrictRepository
     epr.load_data(data_path_hash)
     @district_names << epr.district_names
   end
-
-
 end
