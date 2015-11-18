@@ -11,7 +11,6 @@ class DistrictRepository
   end
 
   def load_data(data_path)
-    puts "Loading data"
     send_enrollment_data(data_path) if data_path.keys.include?(:enrollment)
     if data_path.keys.include?(:statewide_testing)
       send_statewide_test_data(data_path)

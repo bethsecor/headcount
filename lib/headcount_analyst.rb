@@ -138,7 +138,9 @@ class HeadcountAnalyst
     check_for_input_error(grade_subject_hash)
     weights = grade_subject_hash.fetch(:weighting, {:math => 1/3.0, :reading  => 1/3.0, :writing  => 1/3.0})
     if grade_subject_hash.key?(:subject)
-      growths = calculate_growth_for_single_subject(grade_subject_hash[:subject], grade_subject_hash[:grade], grade_subject_hash.fetch(:top, 1))
+      growths = calculate_growth_for_single_subject(grade_subject_hash[:subject],
+                                                    grade_subject_hash[:grade],
+                                                    grade_subject_hash.fetch(:top, 1))
     elsif !grade_subject_hash.key?(:subject)
       calculate_growth_for_all_subjects(grade_subject_hash[:grade], weights)
     end
