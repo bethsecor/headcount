@@ -33,7 +33,9 @@ class StatewideTest
     valid_subjects = [:math, :reading, :writing]
     raise UnknownDataError unless valid_subjects.include?(subject) &&
       [2008, 2009, 2010, 2011, 2012, 2013, 2014].include?(year)
-    proficient_by_grade(grade)[year][subject]
+    result = proficient_by_grade(grade)[year][subject]
+    result = "N/A" if result.nil?
+    result
   end
 
   def truncate_to_three_digits(value)

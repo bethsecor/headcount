@@ -147,13 +147,18 @@ class HeadcountAnalyst
   def calculate_weighted_yoy_growth(grade, district, weights)
     subject_diffs = [:math, :reading, :writing].map do |subj|
       subject_data = get_subject_data(district, subj, grade)
-      # binding.pry
-      unless subject_data.nil?
-      calculate_differences(subject_data) * weights[subj]
+      # binding.pry if district == "OURAY R-1"
+      unless subject_data.compact.empty?
+        r = calculate_differences(subject_data)
+        r * weights[subj] unless r.nil?
       end
     end
     subject_diffs = subject_diffs.compact
-    [district, subject_diffs.reduce(:+)]
+    if subject_diffs
+      [district, subject_diffs.reduce(:+)]
+    else
+      [district, "N/A"]
+    end
   end
 
   def calculate_growth_for_all_subjects(grade, weights)
@@ -163,7 +168,8 @@ class HeadcountAnalyst
       # binding.pry
       dist_calcs << diffs unless diffs.last.nil?
     end
-    dist_calcs.sort_by { |dist, data| data }.last.flatten
+    result = dist_calcs.sort_by { |dist, data| data }.last.flatten
+    [result[0], truncate_to_three_digits(result[1])]
   end
 
   def calculate_growth_for_single_subject(subject, grade, top)
@@ -173,7 +179,7 @@ class HeadcountAnalyst
     unless subject_data.nil?
       diffs = calculate_differences(subject_data)
       dist_calcs << [dist,
-                     diffs] unless diffs.nil?
+                     truncate_to_three_digits(diffs)] unless diffs.nil?
     end
     end
     results = dist_calcs.sort_by { |dist, data| data }.reverse!.first(top)
@@ -223,19 +229,42 @@ class HeadcountAnalyst
 
   def get_grade_data(dist, subject, grade)
     d = district_repo.find_by_name(dist)
-    d.statewide_testing.grade_data[dictionary[grade]]
+    d.statewide_test.grade_data[dictionary[grade]]
+  end
+
+  def new_calculate_differences
   end
 
   def calculate_differences(array, differences = [])
-    array = array.compact
-    if array.length >=2
-      differences << (array[-1] - array[-2])
-      array.pop
-      calculate_differences(array, differences)
-    else
-      truncate_to_three_digits(differences.reduce(:+) / differences.length) unless differences.empty?
+
+    # array = array.compact
+    # if array.length >=2
+    #   differences << (array[-1] - array[-2])
+    #   array.pop
+    #   calculate_differences(array, differences)
+    # else
+    #   truncate_to_three_digits(differences.reduce(:+) / differences.length) unless differences.empty?
+    # end
+    unless array.empty? || array.all? { |elem| elem.nil? }
+    final_arr = remove_nils_at_ends(array)
+      if final_arr.compact.length >=2
+        (final_arr.compact.last - final_arr.compact.first) / (final_arr.length - 1)
+      end
     end
   end
+
+  def remove_nils_at_ends(array)
+    if array.last.nil?
+      array.pop
+      remove_nils_at_ends(array)
+    elsif array.first.nil?
+      array.shift
+      remove_nils_at_ends(array)
+    else
+      array
+    end
+  end
+
 
   def check_for_input_error(grade_subject_hash)
     unless grade_subject_hash.keys.include?(:grade)
@@ -252,6 +281,7 @@ class HeadcountAnalyst
   end
 
   def truncate_to_three_digits(value)
+    # binding.pry if value == nil
     (value * 1000).truncate.to_f / 1000 unless value.nil?
   end
 

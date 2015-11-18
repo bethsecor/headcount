@@ -119,7 +119,7 @@ class DistrictRepositoryTest < Minitest::Test
     })
     district = dr.find_by_name("ACADEMY 20")
 
-    assert_equal 0.857, district.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
+    assert_equal 0.857, district.statewide_test.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
   end
 
   def test_kindergarten_participation_returns_nil_if_NA
