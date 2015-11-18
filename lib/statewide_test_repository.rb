@@ -1,6 +1,6 @@
 require_relative 'statewide_test'
-require_relative 'csap_data_merger'
-require_relative 'grade_data_merger'
+require_relative 'csap_data_parser'
+require_relative 'grade_data_parser'
 require_relative 'union_merger'
 require 'pry'
 
@@ -34,14 +34,16 @@ class StatewideTestRepository
   def load_csap_data(data_path_hash)
     path_keys = data_path_hash[:statewide_testing].keys
     if [:math, :reading, :writing].all? { |s| path_keys.include? s }
-      CSAPDataMerger.new(data_path_hash).merge_csap_data
+      # CSAPDataMerger.new(data_path_hash).merge_csap_data
+      CSAPDataParser.new(data_path_hash[:statewide_testing]).read_and_format_csap
     end
   end
 
   def load_grade_data(data_path_hash)
     path_keys = data_path_hash[:statewide_testing].keys
     if path_keys.include?(:third_grade) && path_keys.include?(:eighth_grade)
-      GradeDataMerger.new(data_path_hash).merge_grade_data
+      # GradeDataMerger.new(data_path_hash).merge_grade_data
+      GradeDataParser.new(data_path_hash[:statewide_testing]).read_and_format_grade
     end
   end
 

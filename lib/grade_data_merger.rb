@@ -38,9 +38,14 @@ class GradeDataMerger
 
   def merge_grade_data
     puts "MERGE GRADE DATA"
+    # district_names.map do |district|
+    #   {:name => district,
+    #    :grade_data => deep_merge(third_grade[district], eighth_grade[district])}
+    # end
     district_names.map do |district|
       {:name => district,
-       :grade_data => deep_merge(third_grade[district], eighth_grade[district])}
+       :grade_data => {:third_grade => third_grade[district], :eighth_grade =>
+        eighth_grade[district]}}
     end
   end
 end

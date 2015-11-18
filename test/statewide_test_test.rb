@@ -29,6 +29,7 @@ class StatewideTestTest < Minitest::Test
         {2011=>{:math=>0.68, :reading=>0.83, :writing=>0.7192}, 2012=>{:math=>0.6894, :reading=>0.84585, :writing=>0.70593}},
        :asian=>
         {2011=>{:math=>0.8169, :reading=>0.8976, :writing=>0.8268}, 2012=>{:math=>0.8182, :reading=>0.89328, :writing=>0.8083}}}}
+
     st = StatewideTest.new(data)
     expected = {2011=>{:math=>0.816, :reading=>0.897, :writing=>0.826}, 2012=>{:math=>0.818, :reading=>0.893, :writing=>0.808}}
 

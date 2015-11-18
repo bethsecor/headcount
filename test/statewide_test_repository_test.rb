@@ -56,7 +56,6 @@ class StatewideTestRepositoryTest < Minitest::Test
   end
 
   def test_statewide_testing_repository_basics
-    skip
     str = statewide_repo
     assert str.find_by_name("ACADEMY 20")
     assert str.find_by_name("GUNNISON WATERSHED RE1J")
@@ -86,7 +85,6 @@ class StatewideTestRepositoryTest < Minitest::Test
   end
 
   def test_basic_proficiency_by_race
-    skip
     str = statewide_repo
     testing = str.find_by_name("ACADEMY 20")
     expected = { 2011 => {math: 0.816, reading: 0.897, writing: 0.826},

@@ -45,8 +45,8 @@ class CSAPDataMerger
     # end
     district_names.map do |district|
       {:name => district,
-       :csap_data => deep_merge(deep_merge(math_data[district],
-        reading_data[district]),writing_data[district])}
+       :csap_data => {:math_data => math_data[district], :reading_data =>
+        reading_data[district], :writing_data => writing_data[district]}}
     end
   end
 end
