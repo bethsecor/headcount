@@ -9,6 +9,20 @@ class StatewideTestRepositoryTest < Minitest::Test
     assert_nil sr.find_by_name("ACADEMY 20")
   end
 
+  def test_statewide_repo_responds_to_all_methods
+    str = statewide_repo
+    str.respond_to?("load_data")
+    str.respond_to?("load_csap_data")
+    str.respond_to?("load_grade_data")
+    str.respond_to?("data_includes_third_and_eighth_grade")
+    str.respond_to?("data_includes_all_subjects")
+    str.respond_to?("merge_data")
+    str.respond_to?("create_statewide_tests")
+    str.respond_to?("find_by_name")
+    str.respond_to?("find_all_matching")
+    str.respond_to?("district_names")
+  end
+
   def test_find_by_name
     str = statewide_repo
     st = str.find_by_name("ACADEMY 20")
