@@ -9,28 +9,16 @@ class StatewideTest
     @grade_data = testing_data[:grade_data]
   end
 
-  def proficient_by_race_or_ethnicity(race)
-    raise UnknownRaceError unless [:asian, :black, :pacific_islander, :hispanic,
-      :native_american, :two_or_more, :white, :all_students].include?(race)
-    truncate_hash_values(csap_data[race])
-  end
-
-  def proficient_for_subject_by_race_in_year(subject, race, year)
-    raise UnknownDataError unless subject_race_and_year_are_all_valid(subject, race, year)
-    truncate_to_three_digits(csap_data[race][year][subject])
-  end
-
-  def subject_race_and_year_are_all_valid(subject, race, year)
-    [:math, :reading, :writing].include?(subject) &&
-    [:asian, :black, :pacific_islander, :hispanic, :native_american,
-     :two_or_more, :white, :all_students].include?(race) &&
-    [2011, 2012, 2013, 2014].include?(year)
-  end
-
   def proficient_by_grade(grade)
     dictionary = {3 => :third_grade, 8 => :eighth_grade}
     raise UnknownDataError unless dictionary.keys.include?(grade)
     truncate_hash_values(grade_data[dictionary[grade]])
+  end
+
+  def proficient_by_race_or_ethnicity(race)
+    raise UnknownRaceError unless [:asian, :black, :pacific_islander, :hispanic,
+      :native_american, :two_or_more, :white, :all_students].include?(race)
+    truncate_hash_values(csap_data[race])
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
@@ -39,9 +27,21 @@ class StatewideTest
     result.nil? ? "N/A" : result
   end
 
+  def proficient_for_subject_by_race_in_year(subject, race, year)
+    raise UnknownDataError unless subject_race_and_year_are_all_valid(subject, race, year)
+    truncate_to_three_digits(csap_data[race][year][subject])
+  end
+
   def subject_and_year_are_both_valid(subject, year)
     [:math, :reading, :writing].include?(subject) &&
     [2008, 2009, 2010, 2011, 2012, 2013, 2014].include?(year)
+  end
+
+  def subject_race_and_year_are_all_valid(subject, race, year)
+    [:math, :reading, :writing].include?(subject) &&
+    [:asian, :black, :pacific_islander, :hispanic, :native_american,
+     :two_or_more, :white, :all_students].include?(race) &&
+    [2011, 2012, 2013, 2014].include?(year)
   end
 
   def truncate_to_three_digits(value)
