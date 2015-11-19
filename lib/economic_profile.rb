@@ -28,7 +28,7 @@ class EconomicProfile
   end
 
   def average_income(incomes)
-    incomes.compact.reduce(:+) / incomes.compact.length unless incomes.nil? || incomes.empty?
+    incomes.compact.reduce(:+) / incomes.compact.length.to_f unless incomes.nil? || incomes.compact.empty?
   end
 
   def median_household_income_average
