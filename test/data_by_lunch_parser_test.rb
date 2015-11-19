@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/data_by_lunch_parser'
-require 'pry'
 
 class DataByLunchParserTest < Minitest::Test
 

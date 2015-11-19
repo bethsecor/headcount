@@ -27,5 +27,4 @@ class DataByPercentParserTest < Minitest::Test
 
     assert_equal expected, parser.format_poverty_data
   end
-
 end

@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/data_by_range_parser'
-require 'pry'
 
 class DataByYearRangeParserTest < Minitest::Test
 

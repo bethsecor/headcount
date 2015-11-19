@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/csap_data_parser'
-require 'pry'
 
 class CSAPDataParserTest < Minitest::Test
 

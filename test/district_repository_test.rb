@@ -148,6 +148,20 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 0.857, district.statewide_test.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
   end
 
+  def test_economic_profile_object_relationship
+    dr = DistrictRepository.new
+    dr.load_data({
+    :economic_profile => {
+      :median_household_income => "./data/Median household income.csv",
+      :children_in_poverty => "./data/School-aged children in poverty.csv",
+      :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv",
+      :title_i => "./data/Title I students.csv"
+      }
+    })
+    district = dr.find_by_name("ACADEMY 20")
+    assert_equal 85060,  district.economic_profile.estimated_median_household_income_in_year(2005)
+  end
+
   def test_kindergarten_participation_returns_nil_if_NA
     dr = DistrictRepository.new
     dr.load_data({

@@ -9,9 +9,9 @@ class DataByRaceEthnicityParserTest < Minitest::Test
     parser = DataByRaceEthnicityParser.new("./test/fixtures/proficiency_on_CSAP_sample.csv", :math)
 
     assert parser.respond_to?(:parse)
-end
+  end
 
-  def test_parse_returns_hash_of_hashes_of_hashes
+  def test_parse_CSAP_data
     parser = DataByRaceEthnicityParser.new("./test/fixtures/proficiency_on_CSAP_sample_math.csv", :math)
     expected = {"COLORADO" =>
                 {:all_students => {2011 => {:math => 0.5573}, 2012 => {:math => 0.558}},
@@ -26,7 +26,7 @@ end
     assert_equal expected, parser.parse
   end
 
-  def test_format_returns_hash_of_all_data
+  def test_parse_and_format_CSAP_data
     parser = DataByRaceEthnicityParser.new("./test/fixtures/proficiency_on_CSAP_sample.csv", :math)
     data = {"COLORADO" => {:all_students => {2011 => {:math => 0.5573}, 2012 => {:math => 0.558}},
                     :asian => {2011 => {:math => 0.7094}, 2012 => {:math => 0.7192}}},
@@ -40,5 +40,4 @@ end
 
     assert_equal expected, parser.format_csap(data)
   end
-
 end
