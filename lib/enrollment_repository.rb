@@ -1,7 +1,6 @@
 require_relative 'data_by_year_parser'
 require_relative 'enrollment'
 require_relative 'union_merger'
-require 'pry'
 
 # Holds all enrollment instances
 class EnrollmentRepository

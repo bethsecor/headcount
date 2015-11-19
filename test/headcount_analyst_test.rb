@@ -2,9 +2,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/headcount_analyst'
 require './lib/district_repository'
-require 'pry'
-require 'pry-rescue'
-require 'pry-rescue/minitest'
+
 
 class HeadcountAnalystTest < Minitest::Test
 

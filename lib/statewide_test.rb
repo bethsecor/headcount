@@ -1,4 +1,3 @@
-require 'pry'
 # Holds all enrollment data for a given district
 class StatewideTest
   attr_reader :name, :csap_data, :grade_data

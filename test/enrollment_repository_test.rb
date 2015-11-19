@@ -2,8 +2,6 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/enrollment_repository'
 
-require 'pry'
-
 class EnrollmentRepositoryTest < Minitest::Test
 
   def test_load_kindergarten_data

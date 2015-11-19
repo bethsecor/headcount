@@ -1,4 +1,3 @@
-require 'pry'
 class EconomicProfile
   attr_reader :name, :median_household_income, :children_in_poverty, :free_or_reduced_price_lunch, :title_i
 

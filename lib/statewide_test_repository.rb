@@ -2,7 +2,6 @@ require_relative 'statewide_test'
 require_relative 'csap_data_parser'
 require_relative 'grade_data_parser'
 require_relative 'union_merger'
-require 'pry'
 
 class StatewideTestRepository
   attr_reader :statewide_tests

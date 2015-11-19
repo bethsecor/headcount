@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/data_by_percent_parser'
-require 'pry'
 
 class DataByPercentParserTest < Minitest::Test
 

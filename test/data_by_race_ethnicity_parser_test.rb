@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/data_by_race_ethnicity_parser'
-require 'pry'
 
 class DataByRaceEthnicityParserTest < Minitest::Test
 

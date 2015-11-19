@@ -1,5 +1,3 @@
-require 'pry'
-
 # Analyzes data from district repository
 class HeadcountAnalyst
   attr_reader :district_repo

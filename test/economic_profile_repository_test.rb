@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/economic_profile_repository'
-require 'pry'
 
 class EconomicProfileRepositoryTest < Minitest::Test
 

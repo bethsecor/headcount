@@ -1,4 +1,5 @@
 require 'csv'
+
 class CSAPDataParser
   def initialize(path)
     @path = path

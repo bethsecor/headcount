@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/statewide_test_repository'
-require 'pry'
 
 class StatewideTestRepositoryTest < Minitest::Test
   def test_find_by_name_returns_nil
